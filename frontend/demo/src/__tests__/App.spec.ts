@@ -2,15 +2,24 @@ import { describe, it, expect } from 'vitest'
 
 import { mount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
+import { createRouter, createMemoryHistory } from 'vue-router'
 import App from '../App.vue'
 
+const router = createRouter({
+  history: createMemoryHistory(),
+  routes: [{ path: '/', component: { template: '<div />' } }],
+})
+
 describe('App', () => {
-  it('mounts renders properly', () => {
+  it('renders the nav links', async () => {
     const wrapper = mount(App, {
       global: {
-        plugins: [createPinia()],
+        plugins: [createPinia(), router],
       },
     })
-    expect(wrapper.text()).toContain('You did it!')
+    await router.isReady()
+    expect(wrapper.text()).toContain('Products')
+    expect(wrapper.find('a[href="/products/new"]').exists()).toBe(true)
+    expect(wrapper.find('a[href="/orders/new"]').exists()).toBe(true)
   })
 })
