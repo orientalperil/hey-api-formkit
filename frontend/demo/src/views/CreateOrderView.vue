@@ -2,17 +2,24 @@
 import { onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { FormKitSchema } from '@formkit/vue'
-import type { FormKitNode, FormKitSchemaNode } from '@formkit/core'
+import type { FormKitNode } from '@formkit/core'
 
 import { ordersCreate, productsList, type OrderWritable } from '@/client'
 import { OrderWritableFormKitSchema } from '@/client/formkit.gen'
+import { applyFieldOverrides } from '@/formkit/apply-overrides'
 
 const router = useRouter()
 
-// Generated at build time by the custom FormKit hey-api plugin — including the
-// repeatable `items` list, whose rows/remover it references as `$items_rows`
-// and `$items_remove` (supplied below).
-const schema = OrderWritableFormKitSchema as unknown as FormKitSchemaNode[]
+// The generated schema is app-agnostic — including the repeatable `items` list,
+// whose rows/remover it references as `$items_rows` and `$items_remove`
+// (supplied below). The nested `product` relation select is wired here.
+const schema = applyFieldOverrides(OrderWritableFormKitSchema, {
+  product: {
+    $formkit: 'select',
+    options: '$productOptions',
+    placeholder: 'Select a product…',
+  },
+})
 
 let nextKey = 1
 function addRow() {

@@ -94,14 +94,26 @@ import { ProductWritableFormKitSchema } from '@/client/formkit.gen'
 Because the plugin runs with the whole spec graph resolved, it derives input
 types and validation from the OpenAPI model (`maxLength` → `length`,
 `format: email` → email input) and **inlines `$ref` enums** (e.g. `status`) as
-`select` options — no runtime ref resolution. Two things remain runtime concerns
-and are wired via convention:
+`select` options — no runtime ref resolution.
 
-- **Foreign keys** (`supplier`, `category`, `product`) — configured under the
-  plugin's `relations` option to render as `select`s bound to a data reference
-  (e.g. `$supplierOptions`); the view supplies the options.
-- **Repeatable arrays** (an order's `items`) — emitted as a FormKit `list` +
-  `for` loop over `$items_rows`, with a `$items_remove($index)` handler; the
-  view supplies `items_rows` and `items_remove` plus an "add" button.
+The plugin is **app-agnostic**: it knows nothing about this app's models. Two
+things are wired by the view that owns the form:
 
-Regenerating the client (step 2) therefore keeps the forms in sync with the API.
+- **Relation selects.** Foreign keys are emitted as generic `number` inputs. The
+  view turns them into selects via `applyFieldOverrides()`
+  (`src/formkit/apply-overrides.ts`), a generic helper that merges per-field
+  patches by `name` (recursing into nested groups):
+
+  ```ts
+  const schema = applyFieldOverrides(ProductWritableFormKitSchema, {
+    supplier: { $formkit: 'select', options: '$supplierOptions', placeholder: 'Select a supplier…' },
+    category: { $formkit: 'select', options: '$categoryOptions' },
+  })
+  ```
+
+- **Repeatable arrays** (an order's `items`) are emitted as a FormKit `list` +
+  `for` loop over `$items_rows`, with a `$items_remove($index)` handler; the view
+  supplies `items_rows` and `items_remove` plus an "add" button.
+
+Regenerating the client (step 2) therefore keeps the forms in sync with the API,
+while form-specific presentation stays in the views.

@@ -18,13 +18,6 @@ import type { PluginInstance } from '@hey-api/openapi-ts'
 
 interface FormKitPluginConfig {
   name: string
-  /**
-   * Map a property name to a FormKit `options` reference so foreign-key
-   * integers render as `<select>`s fed by runtime data, e.g.
-   * `{ supplier: '$supplierOptions' }`. The referenced data is supplied to
-   * `<FormKitSchema :data>` at runtime.
-   */
-  relations: Record<string, string>
   /** Append a per-row "Remove" button inside repeatable array groups. */
   arrayRemoveButton: boolean
 }
@@ -58,21 +51,13 @@ function propertyToNode(
   rawProp: Schema,
   isRequired: boolean,
   schemas: Record<string, Schema>,
-  config: FormKitPluginConfig,
 ): FormKitNode {
   const prop = deref(rawProp, schemas)
   const node: FormKitNode = { $formkit: 'text', name, label: humanize(name) }
   const validation: string[] = []
   if (isRequired) validation.push('required')
 
-  const relationOptions = config.relations[name]
-
-  if (relationOptions) {
-    // Foreign-key relation -> select fed by runtime options.
-    node.$formkit = 'select'
-    node.options = relationOptions
-    if (isRequired) node.placeholder = `Select a ${humanize(name).toLowerCase()}…`
-  } else if (Array.isArray(prop.enum)) {
+  if (Array.isArray(prop.enum)) {
     node.$formkit = 'select'
     node.options = prop.enum.map((value: string) => ({ value, label: humanize(String(value)) }))
   } else if (prop.type === 'boolean') {
@@ -144,7 +129,7 @@ function objectToFormKitSchema(
       continue
     }
 
-    nodes.push(propertyToNode(name, rawProp as Schema, required.includes(name), schemas, config))
+    nodes.push(propertyToNode(name, rawProp as Schema, required.includes(name), schemas))
   }
 
   return nodes
@@ -173,7 +158,6 @@ const handler = ({ plugin }: { plugin: PluginInstance<any> }) => {
 export const formKitPlugin = definePluginConfig({
   config: {
     arrayRemoveButton: true,
-    relations: {},
   },
   handler,
   name: 'formkit',

@@ -2,15 +2,26 @@
 import { onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { FormKitSchema } from '@formkit/vue'
-import type { FormKitNode, FormKitSchemaNode } from '@formkit/core'
+import type { FormKitNode } from '@formkit/core'
 
 import { categoriesList, productsCreate, suppliersList, type ProductWritable } from '@/client'
 import { ProductWritableFormKitSchema } from '@/client/formkit.gen'
+import { applyFieldOverrides } from '@/formkit/apply-overrides'
 
 const router = useRouter()
 
-// Generated at build time by the custom FormKit hey-api plugin.
-const schema = ProductWritableFormKitSchema as unknown as FormKitSchemaNode[]
+// The generated schema is app-agnostic; wire this app's relation selects here.
+const schema = applyFieldOverrides(ProductWritableFormKitSchema, {
+  supplier: {
+    $formkit: 'select',
+    options: '$supplierOptions',
+    placeholder: 'Select a supplier…',
+  },
+  category: {
+    $formkit: 'select',
+    options: '$categoryOptions',
+  },
+})
 
 // Runtime data referenced by the schema (`$supplierOptions`, `$categoryOptions`).
 const data = reactive<{

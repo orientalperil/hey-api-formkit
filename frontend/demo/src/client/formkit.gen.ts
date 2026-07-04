@@ -55,11 +55,9 @@ export const OrderFormKitSchema = [
         key: '$row.key',
         children: [
           {
-            $formkit: 'select',
+            $formkit: 'number',
             name: 'product',
             label: 'Product',
-            options: '$productOptions',
-            placeholder: 'Select a product…',
             validation: 'required',
           },
           {
@@ -91,11 +89,9 @@ export const OrderFormKitSchema = [
 
 export const OrderItemFormKitSchema = [
   {
-    $formkit: 'select',
+    $formkit: 'number',
     name: 'product',
     label: 'Product',
-    options: '$productOptions',
-    placeholder: 'Select a product…',
     validation: 'required',
   },
   {
@@ -167,11 +163,9 @@ export const PatchedOrderFormKitSchema = [
         key: '$row.key',
         children: [
           {
-            $formkit: 'select',
+            $formkit: 'number',
             name: 'product',
             label: 'Product',
-            options: '$productOptions',
-            placeholder: 'Select a product…',
             validation: 'required',
           },
           {
@@ -225,16 +219,14 @@ export const PatchedProductFormKitSchema = [
     label: 'In stock',
   },
   {
-    $formkit: 'select',
+    $formkit: 'number',
     name: 'category',
     label: 'Category',
-    options: '$categoryOptions',
   },
   {
-    $formkit: 'select',
+    $formkit: 'number',
     name: 'supplier',
     label: 'Supplier',
-    options: '$supplierOptions',
   },
 ]
 
@@ -277,17 +269,14 @@ export const ProductFormKitSchema = [
     label: 'In stock',
   },
   {
-    $formkit: 'select',
+    $formkit: 'number',
     name: 'category',
     label: 'Category',
-    options: '$categoryOptions',
   },
   {
-    $formkit: 'select',
+    $formkit: 'number',
     name: 'supplier',
     label: 'Supplier',
-    options: '$supplierOptions',
-    placeholder: 'Select a supplier…',
     validation: 'required',
   },
 ]
@@ -362,11 +351,9 @@ export const OrderWritableFormKitSchema = [
         key: '$row.key',
         children: [
           {
-            $formkit: 'select',
+            $formkit: 'number',
             name: 'product',
             label: 'Product',
-            options: '$productOptions',
-            placeholder: 'Select a product…',
             validation: 'required',
           },
           {
@@ -398,11 +385,9 @@ export const OrderWritableFormKitSchema = [
 
 export const OrderItemWritableFormKitSchema = [
   {
-    $formkit: 'select',
+    $formkit: 'number',
     name: 'product',
     label: 'Product',
-    options: '$productOptions',
-    placeholder: 'Select a product…',
     validation: 'required',
   },
   {
@@ -474,11 +459,9 @@ export const PatchedOrderWritableFormKitSchema = [
         key: '$row.key',
         children: [
           {
-            $formkit: 'select',
+            $formkit: 'number',
             name: 'product',
             label: 'Product',
-            options: '$productOptions',
-            placeholder: 'Select a product…',
             validation: 'required',
           },
           {
@@ -532,16 +515,14 @@ export const PatchedProductWritableFormKitSchema = [
     label: 'In stock',
   },
   {
-    $formkit: 'select',
+    $formkit: 'number',
     name: 'category',
     label: 'Category',
-    options: '$categoryOptions',
   },
   {
-    $formkit: 'select',
+    $formkit: 'number',
     name: 'supplier',
     label: 'Supplier',
-    options: '$supplierOptions',
   },
 ]
 
@@ -584,17 +565,14 @@ export const ProductWritableFormKitSchema = [
     label: 'In stock',
   },
   {
-    $formkit: 'select',
+    $formkit: 'number',
     name: 'category',
     label: 'Category',
-    options: '$categoryOptions',
   },
   {
-    $formkit: 'select',
+    $formkit: 'number',
     name: 'supplier',
     label: 'Supplier',
-    options: '$supplierOptions',
-    placeholder: 'Select a supplier…',
     validation: 'required',
   },
 ]
