@@ -52,3 +52,25 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+
+## API Client (hey-api)
+
+The typed API client in `src/client/` is generated from the backend's OpenAPI
+schema with [`@hey-api/openapi-ts`](https://heyapi.dev/). The base URL is read at
+runtime from `VITE_API_URL` (see `.env` and `src/hey-api.ts`).
+
+### 1. Regenerate `openapi.yaml` from the backend
+
+Run from the `backend/demo` directory (requires the backend's Poetry env):
+
+```sh
+poetry run python manage.py spectacular --file ../../frontend/demo/openapi.yaml
+```
+
+### 2. Regenerate the TypeScript client from `openapi.yaml`
+
+Run from `frontend/demo`:
+
+```sh
+npm run generate:api
+```
