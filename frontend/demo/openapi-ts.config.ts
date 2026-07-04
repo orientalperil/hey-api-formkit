@@ -1,5 +1,7 @@
 import { defineConfig } from '@hey-api/openapi-ts'
 
+import { formKitPlugin } from './openapi-ts-plugin/formkit'
+
 // https://heyapi.dev/openapi-ts/get-started
 export default defineConfig({
   input: './openapi.yaml',
@@ -20,5 +22,13 @@ export default defineConfig({
       name: '@hey-api/typescript',
       enums: 'javascript',
     },
+    // Custom plugin: emits FormKit schema arrays to src/client/formkit.gen.ts.
+    formKitPlugin({
+      relations: {
+        category: '$categoryOptions',
+        product: '$productOptions',
+        supplier: '$supplierOptions',
+      },
+    }),
   ],
 })

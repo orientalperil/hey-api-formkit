@@ -2,32 +2,17 @@
 import { onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { FormKitSchema } from '@formkit/vue'
-import type { FormKitNode } from '@formkit/core'
+import type { FormKitNode, FormKitSchemaNode } from '@formkit/core'
 
 import { categoriesList, productsCreate, suppliersList, type ProductWritable } from '@/client'
-import { ProductWritableSchema } from '@/client/schemas.gen'
-import { objectToFormKitSchema } from '@/formkit/openapi-to-formkit'
+import { ProductWritableFormKitSchema } from '@/client/formkit.gen'
 
 const router = useRouter()
 
-// FormKit schema generated from the OpenAPI `ProductWritable` model. Relation
-// fields (supplier/category) become selects whose options come from `data`.
-const schema = objectToFormKitSchema(ProductWritableSchema, {
-  overrides: {
-    supplier: {
-      $formkit: 'select',
-      options: '$supplierOptions',
-      placeholder: 'Select a supplier…',
-    },
-    category: {
-      $formkit: 'select',
-      options: '$categoryOptions',
-    },
-    in_stock: { value: true },
-  },
-})
+// Generated at build time by the custom FormKit hey-api plugin.
+const schema = ProductWritableFormKitSchema as unknown as FormKitSchemaNode[]
 
-// Reactive data referenced by the schema (`$supplierOptions`, `$categoryOptions`).
+// Runtime data referenced by the schema (`$supplierOptions`, `$categoryOptions`).
 const data = reactive<{
   supplierOptions: { value: number; label: string }[]
   categoryOptions: { value: number | null; label: string }[]
@@ -61,7 +46,7 @@ async function onSubmit(values: ProductWritable, node?: FormKitNode) {
 <template>
   <section>
     <h2>New product</h2>
-    <FormKit type="form" submit-label="Create product" @submit="onSubmit">
+    <FormKit type="form" :value="{ in_stock: true }" submit-label="Create product" @submit="onSubmit">
       <FormKitSchema :schema="schema" :data="data" />
     </FormKit>
   </section>

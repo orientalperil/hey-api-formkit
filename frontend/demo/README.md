@@ -80,13 +80,28 @@ This also emits runtime JSON Schemas (`src/client/schemas.gen.ts`) via the
 
 ## Schema-driven forms (FormKit)
 
-The create-product and create-order forms are not hand-written. Instead,
-`src/formkit/openapi-to-formkit.ts` converts the generated JSON Schemas into a
-[FormKit schema](https://formkit.com/essentials/schema), which
-`<FormKitSchema>` renders. Input types and validation rules are derived from the
-OpenAPI model (e.g. `maxLength` → `length`, `format: email` → email input,
-enums → `select`). Relation fields (foreign keys) and the order's repeatable
-line items are supplied per-field via `overrides` / `repeatableList`, since
-their options and add/remove behaviour are runtime concerns.
+The create-product and create-order forms are not hand-written. A custom
+`@hey-api/openapi-ts` plugin (`openapi-ts-plugin/formkit.ts`, registered in
+`openapi-ts.config.ts`) emits [FormKit schemas](https://formkit.com/essentials/schema)
+to `src/client/formkit.gen.ts` at generation time — one exported
+`<Model>FormKitSchema` per object schema. The views import these directly and
+render them with `<FormKitSchema>`:
+
+```ts
+import { ProductWritableFormKitSchema } from '@/client/formkit.gen'
+```
+
+Because the plugin runs with the whole spec graph resolved, it derives input
+types and validation from the OpenAPI model (`maxLength` → `length`,
+`format: email` → email input) and **inlines `$ref` enums** (e.g. `status`) as
+`select` options — no runtime ref resolution. Two things remain runtime concerns
+and are wired via convention:
+
+- **Foreign keys** (`supplier`, `category`, `product`) — configured under the
+  plugin's `relations` option to render as `select`s bound to a data reference
+  (e.g. `$supplierOptions`); the view supplies the options.
+- **Repeatable arrays** (an order's `items`) — emitted as a FormKit `list` +
+  `for` loop over `$items_rows`, with a `$items_remove($index)` handler; the
+  view supplies `items_rows` and `items_remove` plus an "add" button.
 
 Regenerating the client (step 2) therefore keeps the forms in sync with the API.
