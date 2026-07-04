@@ -46,11 +46,23 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'rest_framework',
+    'drf_spectacular',
     'whitenoise.runserver_nostatic',
     'corsheaders',
 
     'core',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Demo API',
+    'DESCRIPTION': 'A small example REST API with an OpenAPI schema.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
