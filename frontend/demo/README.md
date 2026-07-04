@@ -74,3 +74,19 @@ Run from `frontend/demo`:
 ```sh
 npm run generate:api
 ```
+
+This also emits runtime JSON Schemas (`src/client/schemas.gen.ts`) via the
+`@hey-api/schemas` plugin.
+
+## Schema-driven forms (FormKit)
+
+The create-product and create-order forms are not hand-written. Instead,
+`src/formkit/openapi-to-formkit.ts` converts the generated JSON Schemas into a
+[FormKit schema](https://formkit.com/essentials/schema), which
+`<FormKitSchema>` renders. Input types and validation rules are derived from the
+OpenAPI model (e.g. `maxLength` → `length`, `format: email` → email input,
+enums → `select`). Relation fields (foreign keys) and the order's repeatable
+line items are supplied per-field via `overrides` / `repeatableList`, since
+their options and add/remove behaviour are runtime concerns.
+
+Regenerating the client (step 2) therefore keeps the forms in sync with the API.

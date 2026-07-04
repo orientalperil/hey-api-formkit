@@ -1,55 +1,59 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { FormKitSchema } from '@formkit/vue'
+import type { FormKitNode } from '@formkit/core'
 
-import {
-  categoriesList,
-  productsCreate,
-  suppliersList,
-  type Category,
-  type ProductWritable,
-  type Supplier,
-} from '@/client'
+import { categoriesList, productsCreate, suppliersList, type ProductWritable } from '@/client'
+import { ProductWritableSchema } from '@/client/schemas.gen'
+import { objectToFormKitSchema } from '@/formkit/openapi-to-formkit'
 
 const router = useRouter()
 
-const form = ref<ProductWritable>({
-  name: '',
-  description: '',
-  price: '',
-  in_stock: true,
-  category: null,
-  supplier: null as unknown as number,
+// FormKit schema generated from the OpenAPI `ProductWritable` model. Relation
+// fields (supplier/category) become selects whose options come from `data`.
+const schema = objectToFormKitSchema(ProductWritableSchema, {
+  overrides: {
+    supplier: {
+      $formkit: 'select',
+      options: '$supplierOptions',
+      placeholder: 'Select a supplier…',
+    },
+    category: {
+      $formkit: 'select',
+      options: '$categoryOptions',
+    },
+    in_stock: { value: true },
+  },
 })
 
-const suppliers = ref<Supplier[]>([])
-const categories = ref<Category[]>([])
-const submitting = ref(false)
-const error = ref<string | null>(null)
+// Reactive data referenced by the schema (`$supplierOptions`, `$categoryOptions`).
+const data = reactive<{
+  supplierOptions: { value: number; label: string }[]
+  categoryOptions: { value: number | null; label: string }[]
+}>({
+  supplierOptions: [],
+  categoryOptions: [{ value: null, label: '— None —' }],
+})
 
 onMounted(async () => {
-  try {
-    const [suppliersRes, categoriesRes] = await Promise.all([
-      suppliersList({ throwOnError: true }),
-      categoriesList({ throwOnError: true }),
-    ])
-    suppliers.value = suppliersRes.data
-    categories.value = categoriesRes.data
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to load form options'
-  }
+  const [suppliers, categories] = await Promise.all([
+    suppliersList({ throwOnError: true }),
+    categoriesList({ throwOnError: true }),
+  ])
+  data.supplierOptions = suppliers.data.map((s) => ({ value: s.id, label: s.name }))
+  data.categoryOptions = [
+    { value: null, label: '— None —' },
+    ...categories.data.map((c) => ({ value: c.id, label: c.name })),
+  ]
 })
 
-async function submit() {
-  submitting.value = true
-  error.value = null
+async function onSubmit(values: ProductWritable, node?: FormKitNode) {
   try {
-    await productsCreate({ body: form.value, throwOnError: true })
+    await productsCreate({ body: values, throwOnError: true })
     await router.push('/products')
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to create product'
-  } finally {
-    submitting.value = false
+    node?.setErrors([e instanceof Error ? e.message : 'Failed to create product'])
   }
 }
 </script>
@@ -57,85 +61,8 @@ async function submit() {
 <template>
   <section>
     <h2>New product</h2>
-    <p v-if="error" class="error">{{ error }}</p>
-
-    <form @submit.prevent="submit">
-      <label>
-        Name
-        <input v-model="form.name" type="text" required />
-      </label>
-
-      <label>
-        Description
-        <textarea v-model="form.description" rows="3"></textarea>
-      </label>
-
-      <label>
-        Price
-        <input v-model="form.price" type="text" inputmode="decimal" placeholder="0.00" required />
-      </label>
-
-      <label>
-        Supplier
-        <select v-model.number="form.supplier" required>
-          <option :value="undefined" disabled>Select a supplier…</option>
-          <option v-for="s in suppliers" :key="s.id" :value="s.id">{{ s.name }}</option>
-        </select>
-      </label>
-
-      <label>
-        Category
-        <select v-model.number="form.category">
-          <option :value="null">— None —</option>
-          <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name }}</option>
-        </select>
-      </label>
-
-      <label class="checkbox">
-        <input v-model="form.in_stock" type="checkbox" />
-        In stock
-      </label>
-
-      <button type="submit" :disabled="submitting">
-        {{ submitting ? 'Saving…' : 'Create product' }}
-      </button>
-    </form>
+    <FormKit type="form" submit-label="Create product" @submit="onSubmit">
+      <FormKitSchema :schema="schema" :data="data" />
+    </FormKit>
   </section>
 </template>
-
-<style scoped>
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 24rem;
-}
-
-label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-weight: 600;
-}
-
-label.checkbox {
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-input,
-textarea,
-select {
-  padding: 0.4rem 0.5rem;
-  font: inherit;
-}
-
-button {
-  align-self: flex-start;
-}
-
-.error {
-  color: #c0392b;
-}
-</style>
