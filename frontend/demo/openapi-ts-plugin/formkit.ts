@@ -146,12 +146,18 @@ const handler = ({ plugin }: { plugin: PluginInstance<any> }) => {
 
   const config = plugin.config as FormKitPluginConfig
 
+  // `Array<FormKitSchemaNode>` (imported from '@formkit/core')
+  const schemaNodeArray = $.type('Array').generic(plugin.imports.FormKitSchemaNode)
+
   for (const [name, schema] of Object.entries(schemas)) {
     if (schema?.type !== 'object' || !schema.properties) continue
 
     const nodes = objectToFormKitSchema(schema, schemas, config)
     const symbol = plugin.symbol(`${name}FormKitSchema`)
-    plugin.node($.const(symbol).export().assign($.fromValue(nodes, { layout: 'pretty' })))
+    // export const <Name>FormKitSchema: FormKitSchemaNode[] = [...]
+    plugin.node(
+      $.const(symbol).export().type(schemaNodeArray).assign($.fromValue(nodes, { layout: 'pretty' })),
+    )
   }
 }
 
@@ -160,6 +166,14 @@ export const formKitPlugin = definePluginConfig({
     arrayRemoveButton: true,
   },
   handler,
+  // Emit `import type { FormKitSchemaNode } from '@formkit/core'` and expose it
+  // as `plugin.imports.FormKitSchemaNode` for the annotation above.
+  imports: (plugin: PluginInstance<any>) => ({
+    FormKitSchemaNode: plugin.symbolFactory.register('FormKitSchemaNode', {
+      external: '@formkit/core',
+      kind: 'type',
+    }),
+  }),
   name: 'formkit',
   symbolMeta: () => ({ artifact: 'formkit' }),
 } as any)

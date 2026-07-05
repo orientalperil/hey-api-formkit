@@ -84,11 +84,13 @@ The create-product and create-order forms are not hand-written. A custom
 `@hey-api/openapi-ts` plugin (`openapi-ts-plugin/formkit.ts`, registered in
 `openapi-ts.config.ts`) emits [FormKit schemas](https://formkit.com/essentials/schema)
 to `src/client/formkit.gen.ts` at generation time — one exported
-`<Model>FormKitSchema` per object schema. The views import these directly and
-render them with `<FormKitSchema>`:
+`<Model>FormKitSchema` per object schema, each declared as
+`Array<FormKitSchemaNode>` (the plugin emits the `@formkit/core` type import), so
+views use them directly with no cast:
 
 ```ts
 import { ProductWritableFormKitSchema } from '@/client/formkit.gen'
+// const schema = ProductWritableFormKitSchema  // already FormKitSchemaNode[]
 ```
 
 Because the plugin runs with the whole spec graph resolved, it derives input

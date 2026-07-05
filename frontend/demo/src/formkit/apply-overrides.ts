@@ -17,24 +17,24 @@ export type FieldOverride = Record<string, unknown>
  * owns the form, not in codegen config.
  *
  * The input is cloned, so the module-level generated constant is never mutated.
- * The return type is `FormKitSchemaNode[]`, so callers don't need a cast.
  */
 export function applyFieldOverrides(
-  schema: readonly unknown[],
+  schema: readonly FormKitSchemaNode[],
   overrides: Record<string, FieldOverride>,
 ): FormKitSchemaNode[] {
-  const clone = structuredClone(schema) as Array<Record<string, unknown>>
+  const clone = structuredClone(schema) as FormKitSchemaNode[]
 
-  const walk = (nodes: Array<Record<string, unknown>>) => {
+  const walk = (nodes: FormKitSchemaNode[]) => {
     for (const node of nodes) {
       if (!node || typeof node !== 'object') continue
-      if (typeof node.name === 'string' && overrides[node.name]) {
-        Object.assign(node, overrides[node.name])
+      const record = node as Record<string, unknown>
+      if (typeof record.name === 'string' && overrides[record.name]) {
+        Object.assign(record, overrides[record.name])
       }
-      if (Array.isArray(node.children)) walk(node.children)
+      if (Array.isArray(record.children)) walk(record.children as FormKitSchemaNode[])
     }
   }
 
   walk(clone)
-  return clone as unknown as FormKitSchemaNode[]
+  return clone
 }
