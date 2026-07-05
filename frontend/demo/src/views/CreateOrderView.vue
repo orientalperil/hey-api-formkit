@@ -47,7 +47,7 @@ onMounted(async () => {
 async function onSubmit(values: OrderWritable, node?: FormKitNode) {
   try {
     await ordersCreate({ body: values, throwOnError: true })
-    await router.push('/products')
+    await router.push('/orders')
   } catch (e) {
     node?.setErrors([e instanceof Error ? e.message : 'Failed to create order'])
   }

@@ -12,6 +12,7 @@ import { RouterLink } from 'vue-router'
     <ul>
       <li><RouterLink to="/products">Browse products</RouterLink></li>
       <li><RouterLink to="/products/new">Create a product</RouterLink></li>
+      <li><RouterLink to="/orders">Browse orders</RouterLink></li>
       <li><RouterLink to="/orders/new">Create an order</RouterLink></li>
     </ul>
   </section>
