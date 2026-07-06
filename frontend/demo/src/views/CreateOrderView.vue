@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { FormKitSchema } from '@formkit/vue'
 import type { FormKitNode } from '@formkit/core'
@@ -7,18 +7,18 @@ import type { FormKitNode } from '@formkit/core'
 import { ordersCreate, productsList, type OrderWritable } from '@/client'
 import { OrderWritableFormKitSchema } from '@/client/formkit.gen'
 import { applyFieldOverrides } from '@/formkit/apply-overrides'
+import { dataSelect } from '@/formkit/data-select'
 
 const router = useRouter()
 
 // The generated schema is app-agnostic — including the repeatable `items` list,
 // whose rows/remover it references as `$items_rows` and `$items_remove`
-// (supplied below). The nested `product` relation select is wired here.
+// (supplied below). The nested `product` select fetches its own options; the
+// result is memoized, so every line item shares a single request.
 const schema = applyFieldOverrides(OrderWritableFormKitSchema, {
-  product: {
-    $formkit: 'select',
-    options: '$productOptions',
+  product: dataSelect(productsList, { value: 'id', label: 'name' }, {
     placeholder: 'Select a product…',
-  },
+  }),
 })
 
 let nextKey = 1
@@ -30,18 +30,11 @@ function removeRow(index: number) {
 }
 
 const data = reactive<{
-  productOptions: { value: number; label: string }[]
   items_rows: { key: number }[]
   items_remove: (index: number) => () => void
 }>({
-  productOptions: [],
   items_rows: [{ key: 0 }],
   items_remove: (index: number) => () => removeRow(index),
-})
-
-onMounted(async () => {
-  const { data: products } = await productsList({ throwOnError: true })
-  data.productOptions = products.map((p) => ({ value: p.id, label: p.name }))
 })
 
 async function onSubmit(values: OrderWritable, node?: FormKitNode) {

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { FormKitSchema } from '@formkit/vue'
 import type { FormKitNode } from '@formkit/core'
@@ -7,41 +6,20 @@ import type { FormKitNode } from '@formkit/core'
 import { categoriesList, productsCreate, suppliersList, type ProductWritable } from '@/client'
 import { ProductWritableFormKitSchema } from '@/client/formkit.gen'
 import { applyFieldOverrides } from '@/formkit/apply-overrides'
+import { dataSelect } from '@/formkit/data-select'
 
 const router = useRouter()
 
 // The generated schema is app-agnostic; wire this app's relation selects here.
+// Each select fetches its own options from the SDK endpoint — no reactive data
+// or onMounted needed. Just point it at the list call and map value/label.
 const schema = applyFieldOverrides(ProductWritableFormKitSchema, {
-  supplier: {
-    $formkit: 'select',
-    options: '$supplierOptions',
+  supplier: dataSelect(suppliersList, { value: 'id', label: 'name' }, {
     placeholder: 'Select a supplier…',
-  },
-  category: {
-    $formkit: 'select',
-    options: '$categoryOptions',
-  },
-})
-
-// Runtime data referenced by the schema (`$supplierOptions`, `$categoryOptions`).
-const data = reactive<{
-  supplierOptions: { value: number; label: string }[]
-  categoryOptions: { value: number | null; label: string }[]
-}>({
-  supplierOptions: [],
-  categoryOptions: [{ value: null, label: '— None —' }],
-})
-
-onMounted(async () => {
-  const [suppliers, categories] = await Promise.all([
-    suppliersList({ throwOnError: true }),
-    categoriesList({ throwOnError: true }),
-  ])
-  data.supplierOptions = suppliers.data.map((s) => ({ value: s.id, label: s.name }))
-  data.categoryOptions = [
-    { value: null, label: '— None —' },
-    ...categories.data.map((c) => ({ value: c.id, label: c.name })),
-  ]
+  }),
+  category: dataSelect(categoriesList, { value: 'id', label: 'name' }, {
+    nullable: true,
+  }),
 })
 
 async function onSubmit(values: ProductWritable, node?: FormKitNode) {
@@ -58,7 +36,7 @@ async function onSubmit(values: ProductWritable, node?: FormKitNode) {
   <section>
     <h2>New product</h2>
     <FormKit type="form" :value="{ in_stock: true }" submit-label="Create product" @submit="onSubmit">
-      <FormKitSchema :schema="schema" :data="data" />
+      <FormKitSchema :schema="schema" />
     </FormKit>
   </section>
 </template>
