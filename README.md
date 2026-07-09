@@ -1,3 +1,3 @@
 # hey-api-formkit
 
-Generate FormKit schemas using hey-api's code generator.  After running you will have a `formkit.gen.ts` file in your client. 
+A hey-api plugin to generate FormKit schemas.  Install the plugin and after running you will have a `formkit.gen.ts` file in your client. 
