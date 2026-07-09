@@ -15,6 +15,7 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "format": "prettier src --write",
     "format:check": "prettier src --check",
@@ -31,5 +32,8 @@
     "prettier": "^3.0.0",
     "typescript": "^5.8.0",
     "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "@hey-api/openapi-ts": "^0.99.0"
   }
 }

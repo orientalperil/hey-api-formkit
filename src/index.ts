@@ -9,8 +9,8 @@
  * @see https://heyapi.dev/openapi-ts/plugins  (custom plugins)
  * @see https://formkit.com/essentials/schema
  */
-import { $, definePluginConfig } from '@hey-api/openapi-ts'
-import type { PluginInstance } from '@hey-api/openapi-ts'
+import { $, definePluginConfig } from "@hey-api/openapi-ts"
+import type { DefinePlugin, PluginInstance } from "@hey-api/openapi-ts"
 
 // ---------------------------------------------------------------------------
 // Config
@@ -22,24 +22,31 @@ interface FormKitPluginConfig {
   arrayRemoveButton: boolean
 }
 
+// External symbols this plugin registers, exposed via `plugin.imports`.
+type FormKitImports = {
+  FormKitSchemaNode: ReturnType<PluginInstance["symbolFactory"]["register"]>
+}
+
+type FormKitPlugin = DefinePlugin<FormKitPluginConfig, FormKitPluginConfig, never, FormKitImports>
+
 // ---------------------------------------------------------------------------
 // JSON Schema -> FormKit schema conversion (runs at build time)
 // ---------------------------------------------------------------------------
 
 // Loosely-typed view of the raw OpenAPI schema objects in the spec.
-type Schema = Record<string, any>
+type Schema = Record<string, unknown>
 type FormKitNode = Record<string, unknown>
 
 /** "customer_name" -> "Customer name" */
 function humanize(name: string): string {
-  const spaced = name.replace(/_/g, ' ')
+  const spaced = name.replace(/_/g, " ")
   return spaced.charAt(0).toUpperCase() + spaced.slice(1)
 }
 
 /** Resolve a local `$ref` (e.g. `#/components/schemas/StatusEnum`). */
 function deref(schema: Schema, schemas: Record<string, Schema>): Schema {
-  if (typeof schema?.$ref === 'string') {
-    const name = schema.$ref.split('/').pop() as string
+  if (typeof schema?.$ref === "string") {
+    const name = schema.$ref.split("/").pop() as string
     return { ...schemas[name], ...schema, $ref: undefined }
   }
   return schema
@@ -53,39 +60,39 @@ function propertyToNode(
   schemas: Record<string, Schema>,
 ): FormKitNode {
   const prop = deref(rawProp, schemas)
-  const node: FormKitNode = { $formkit: 'text', name, label: humanize(name) }
+  const node: FormKitNode = { $formkit: "text", name, label: humanize(name) }
   const validation: string[] = []
-  if (isRequired) validation.push('required')
+  if (isRequired) validation.push("required")
 
   if (Array.isArray(prop.enum)) {
-    node.$formkit = 'select'
+    node.$formkit = "select"
     node.options = prop.enum.map((value: string) => ({ value, label: humanize(String(value)) }))
-  } else if (prop.type === 'boolean') {
-    node.$formkit = 'checkbox'
-  } else if (prop.type === 'integer' || prop.type === 'number') {
-    node.$formkit = 'number'
-    if (typeof prop.minimum === 'number') validation.push(`min:${prop.minimum}`)
-    if (typeof prop.maximum === 'number') validation.push(`max:${prop.maximum}`)
+  } else if (prop.type === "boolean") {
+    node.$formkit = "checkbox"
+  } else if (prop.type === "integer" || prop.type === "number") {
+    node.$formkit = "number"
+    if (typeof prop.minimum === "number") validation.push(`min:${prop.minimum}`)
+    if (typeof prop.maximum === "number") validation.push(`max:${prop.maximum}`)
   } else {
     switch (prop.format) {
-      case 'email':
-        node.$formkit = 'email'
-        validation.push('email')
+      case "email":
+        node.$formkit = "email"
+        validation.push("email")
         break
-      case 'decimal': // DRF serializes decimals as strings; validate as a number.
-        node.$formkit = 'text'
-        validation.push('number')
+      case "decimal": // DRF serializes decimals as strings; validate as a number.
+        node.$formkit = "text"
+        validation.push("number")
         break
-      case 'date-time':
-        node.$formkit = 'datetime-local'
+      case "date-time":
+        node.$formkit = "datetime-local"
         break
       default:
-        node.$formkit = 'text'
+        node.$formkit = "text"
     }
-    if (typeof prop.maxLength === 'number') validation.push(`length:0,${prop.maxLength}`)
+    if (typeof prop.maxLength === "number") validation.push(`length:0,${prop.maxLength}`)
   }
 
-  if (validation.length) node.validation = validation.join('|')
+  if (validation.length) node.validation = validation.join("|")
   return node
 }
 
@@ -102,26 +109,26 @@ function objectToFormKitSchema(
     const prop = deref(rawProp as Schema, schemas)
     if (prop.readOnly) continue
 
-    if (prop.type === 'array' && prop.items) {
+    if (prop.type === "array" && prop.items) {
       // Repeatable list of object items, driven by a reactive `$<name>_rows`
       // array supplied at runtime. Add/remove is a runtime concern.
-      const itemSchema = deref(prop.items, schemas)
+      const itemSchema = deref(prop.items as Schema, schemas)
       const itemFields = objectToFormKitSchema(itemSchema, schemas, config)
       if (config.arrayRemoveButton) {
         itemFields.push({
-          $el: 'button',
-          attrs: { type: 'button', class: 'formkit-remove', onClick: `$${name}_remove($index)` },
-          children: 'Remove',
+          $el: "button",
+          attrs: { type: "button", class: "formkit-remove", onClick: `$${name}_remove($index)` },
+          children: "Remove",
         })
       }
       nodes.push({
-        $formkit: 'list',
+        $formkit: "list",
         name,
         children: [
           {
-            $formkit: 'group',
-            for: ['row', 'index', `$${name}_rows`],
-            key: '$row.key',
+            $formkit: "group",
+            for: ["row", "index", `$${name}_rows`],
+            key: "$row.key",
             children: itemFields,
           },
         ],
@@ -139,7 +146,7 @@ function objectToFormKitSchema(
 // Plugin handler
 // ---------------------------------------------------------------------------
 
-const handler = ({ plugin }: { plugin: PluginInstance<any> }) => {
+const handler = ({ plugin }: { plugin: FormKitPlugin["Instance"] }) => {
   const spec = plugin.context.spec as { components?: { schemas?: Record<string, Schema> } }
   const schemas = spec.components?.schemas
   if (!schemas) return
@@ -147,33 +154,36 @@ const handler = ({ plugin }: { plugin: PluginInstance<any> }) => {
   const config = plugin.config as FormKitPluginConfig
 
   // `Array<FormKitSchemaNode>` (imported from '@formkit/core')
-  const schemaNodeArray = $.type('Array').generic(plugin.imports.FormKitSchemaNode)
+  const schemaNodeArray = $.type("Array").generic(plugin.imports.FormKitSchemaNode)
 
   for (const [name, schema] of Object.entries(schemas)) {
-    if (schema?.type !== 'object' || !schema.properties) continue
+    if (schema?.type !== "object" || !schema.properties) continue
 
     const nodes = objectToFormKitSchema(schema, schemas, config)
     const symbol = plugin.symbol(`${name}FormKitSchema`)
     // export const <Name>FormKitSchema: FormKitSchemaNode[] = [...]
     plugin.node(
-      $.const(symbol).export().type(schemaNodeArray).assign($.fromValue(nodes, { layout: 'pretty' })),
+      $.const(symbol)
+        .export()
+        .type(schemaNodeArray)
+        .assign($.fromValue(nodes, { layout: "pretty" })),
     )
   }
 }
 
-export const formKitPlugin = definePluginConfig({
+export const formKitPlugin = definePluginConfig<FormKitPlugin["Types"]>({
   config: {
     arrayRemoveButton: true,
   },
   handler,
   // Emit `import type { FormKitSchemaNode } from '@formkit/core'` and expose it
   // as `plugin.imports.FormKitSchemaNode` for the annotation above.
-  imports: (plugin: PluginInstance<any>) => ({
-    FormKitSchemaNode: plugin.symbolFactory.register('FormKitSchemaNode', {
-      external: '@formkit/core',
-      kind: 'type',
+  imports: (plugin: FormKitPlugin["Instance"]) => ({
+    FormKitSchemaNode: plugin.symbolFactory.register("FormKitSchemaNode", {
+      external: "@formkit/core",
+      kind: "type",
     }),
   }),
-  name: 'formkit',
-  symbolMeta: () => ({ artifact: 'formkit' }),
-} as any)
+  name: "formkit",
+  symbolMeta: () => ({ artifact: "formkit" }),
+} as FormKitPlugin["Config"])

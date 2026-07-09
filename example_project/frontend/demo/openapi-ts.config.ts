@@ -1,6 +1,6 @@
 import { defineConfig } from '@hey-api/openapi-ts'
 
-import { formKitPlugin } from './openapi-ts-plugin/formkit'
+import { formKitPlugin } from 'hey-api-formkit'
 
 // https://heyapi.dev/openapi-ts/get-started
 export default defineConfig({
