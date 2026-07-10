@@ -1,7 +1,7 @@
 import { select } from '@formkit/inputs'
 import type { FormKitNode, FormKitTypeDefinition } from '@formkit/core'
 
-import { fetchAll, type ListItem } from '@/api/pagination'
+import { type ListItem, type Paginated } from '@/api/pagination'
 
 /**
  * A `select` input that loads its own options.
@@ -63,7 +63,7 @@ export interface DataSelectConfig {
  * select, backed by a hey-api list endpoint.
  *
  * Pass the SDK function itself plus which fields map to the option `value` and
- * `label` — the select fetches every page (via `fetchAll`) and maps the rows.
+ * `label` — the select makes a single list call and maps the rows.
  * The result is memoized, so a select repeated across rows (an order's line
  * items) hits the API once.
  *
@@ -78,15 +78,22 @@ export function dataSelect<F extends (...args: never[]) => unknown>(
   const { nullable, prepend = [], ...fieldProps } = config
   const leading = nullable ? [NONE_OPTION, ...prepend] : prepend
 
+  const call = listFn as unknown as (options: {
+    throwOnError: true
+  }) => Promise<{ data: ListItem<F>[] | Paginated<ListItem<F>> }>
+
   let cache: Promise<SelectOption[]> | undefined
   const options: OptionsLoader = () =>
-    (cache ??= fetchAll(listFn).then((items) => [
-      ...leading,
-      ...items.map((item) => ({
-        value: item[mapping.value],
-        label: String(item[mapping.label]),
-      })),
-    ]))
+    (cache ??= call({ throwOnError: true }).then(({ data }) => {
+      const items = Array.isArray(data) ? data : data.results
+      return [
+        ...leading,
+        ...items.map((item) => ({
+          value: item[mapping.value],
+          label: String(item[mapping.label]),
+        })),
+      ]
+    }))
 
   return { $formkit: 'dataSelect', options, ...fieldProps }
 }
