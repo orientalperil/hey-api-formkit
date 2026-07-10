@@ -8,6 +8,7 @@ import { ordersCreate, productsList, type OrderWritable } from '@/client'
 import { OrderWritableFormKitSchema } from '@/client/formkit.gen'
 import { applyFieldOverrides } from '@/formkit/apply-overrides'
 import { dataSelect } from '@/formkit/data-select'
+import {fetchAll} from "../api/pagination";
 
 const router = useRouter()
 
@@ -16,7 +17,7 @@ const router = useRouter()
 // (supplied below). The nested `product` select fetches its own options; the
 // result is memoized, so every line item shares a single request.
 const schema = applyFieldOverrides(OrderWritableFormKitSchema, {
-  product: dataSelect(productsList, { value: 'id', label: 'name' }, {
+  product: dataSelect(() => fetchAll(productsList), { value: 'id', label: 'name' }, {
     placeholder: 'Select a product…',
   }),
 })

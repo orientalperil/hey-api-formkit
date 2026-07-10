@@ -7,6 +7,7 @@ import { categoriesList, productsCreate, suppliersList, type ProductWritable } f
 import { ProductWritableFormKitSchema } from '@/client/formkit.gen'
 import { applyFieldOverrides } from '@/formkit/apply-overrides'
 import { dataSelect } from '@/formkit/data-select'
+import {fetchAll} from "../api/pagination";
 
 const router = useRouter()
 
@@ -14,10 +15,10 @@ const router = useRouter()
 // Each select fetches its own options from the SDK endpoint — no reactive data
 // or onMounted needed. Just point it at the list call and map value/label.
 const schema = applyFieldOverrides(ProductWritableFormKitSchema, {
-  supplier: dataSelect(suppliersList, { value: 'id', label: 'name' }, {
+  supplier: dataSelect(() => fetchAll(suppliersList), { value: 'id', label: 'name' }, {
     placeholder: 'Select a supplier…',
   }),
-  category: dataSelect(categoriesList, { value: 'id', label: 'name' }, {
+  category: dataSelect(() => fetchAll(categoriesList), { value: 'id', label: 'name' }, {
     nullable: true,
   }),
 })
