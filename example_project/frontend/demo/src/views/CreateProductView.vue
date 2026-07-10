@@ -7,7 +7,7 @@ import { categoriesList, productsCreate, suppliersList, type ProductWritable } f
 import { ProductWritableFormKitSchema } from '@/client/formkit.gen'
 import { applyFieldOverrides } from '@/formkit/apply-overrides'
 import { dataSelect } from '@/formkit/data-select'
-import {fetchAll} from "../api/pagination";
+import { fetchAll } from 'django-rest-framework-helpers/pagination'
 
 const router = useRouter()
 
