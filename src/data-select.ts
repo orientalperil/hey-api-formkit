@@ -1,5 +1,5 @@
-import { select } from '@formkit/inputs'
-import type { FormKitNode, FormKitTypeDefinition } from '@formkit/core'
+import type { FormKitNode, FormKitTypeDefinition } from "@formkit/core"
+import { select } from "@formkit/inputs"
 
 /**
  * A `select` input that loads its own options.
@@ -15,16 +15,14 @@ export interface SelectOption {
   label: string
 }
 
-export type OptionsLoader = (
-  node: FormKitNode,
-) => SelectOption[] | Promise<SelectOption[]>
+export type OptionsLoader = (node: FormKitNode) => SelectOption[] | Promise<SelectOption[]>
 
 // FormKit stores a function `options` as `node.props.optionsLoader` (and sets
 // `options` to `[]`). The stock `select` never calls it — this feature does.
 function loadOptionsFeature(node: FormKitNode) {
-  node.on('created', async () => {
+  node.on("created", async () => {
     const loader = node.props.optionsLoader as OptionsLoader | undefined
-    if (typeof loader !== 'function') return
+    if (typeof loader !== "function") return
 
     node.props.disabled = true
     try {
@@ -45,7 +43,7 @@ export const dataSelectInput: FormKitTypeDefinition = {
 }
 
 /** Leading option for a nullable relation, letting the user clear the value. */
-const NONE_OPTION: SelectOption = { value: null, label: '— None —' }
+const NONE_OPTION: SelectOption = { value: null, label: "— None —" }
 
 export interface DataSelectConfig {
   /** Empty-state prompt shown as the first, unselectable option. */
@@ -86,5 +84,5 @@ export function dataSelect<T>(
       })),
     ]))
 
-  return { $formkit: 'dataSelect', options, ...fieldProps }
+  return { $formkit: "dataSelect", options, ...fieldProps }
 }

@@ -1,4 +1,4 @@
-import type { FormKitSchemaNode } from '@formkit/core'
+import type { FormKitSchemaNode } from "@formkit/core"
 
 /**
  * A shallow patch merged onto a generated field node, keyed by the field's
@@ -26,9 +26,9 @@ export function applyFieldOverrides(
 
   const walk = (nodes: FormKitSchemaNode[]) => {
     for (const node of nodes) {
-      if (!node || typeof node !== 'object') continue
+      if (!node || typeof node !== "object") continue
       const record = node as Record<string, unknown>
-      if (typeof record.name === 'string' && overrides[record.name]) {
+      if (typeof record.name === "string" && overrides[record.name]) {
         Object.assign(record, overrides[record.name])
       }
       if (Array.isArray(record.children)) walk(record.children as FormKitSchemaNode[])
