@@ -1,8 +1,6 @@
 import { select } from '@formkit/inputs'
 import type { FormKitNode, FormKitTypeDefinition } from '@formkit/core'
 
-import { type ListItem, type Paginated } from '@/api/pagination'
-
 /**
  * A `select` input that loads its own options.
  *
@@ -62,38 +60,31 @@ export interface DataSelectConfig {
  * Build an `applyFieldOverrides` patch that turns a field into a self-loading
  * select, backed by a hey-api list endpoint.
  *
- * Pass the SDK function itself plus which fields map to the option `value` and
- * `label` — the select makes a single list call and maps the rows.
- * The result is memoized, so a select repeated across rows (an order's line
- * items) hits the API once.
+ * Pass a loader that resolves to the rows plus which fields map to the option
+ * `value` and `label`. Wrap the SDK call in `fetchAll` so pagination is
+ * followed to the end. The result is memoized, so a select repeated across rows
+ * (an order's line items) hits the API once.
  *
  * @example
- * supplier: dataSelect(suppliersList, { value: 'id', label: 'name' }, { placeholder: 'Select a supplier…' })
+ * supplier: dataSelect(() => fetchAll(suppliersList), { value: 'id', label: 'name' }, { placeholder: 'Select a supplier…' })
  */
-export function dataSelect<F extends (...args: never[]) => unknown>(
-  listFn: F,
-  mapping: { value: keyof ListItem<F>; label: keyof ListItem<F> },
+export function dataSelect<T>(
+  listFn: () => Promise<T[]>,
+  mapping: { value: keyof T; label: keyof T },
   config: DataSelectConfig = {},
 ): Record<string, unknown> {
   const { nullable, prepend = [], ...fieldProps } = config
   const leading = nullable ? [NONE_OPTION, ...prepend] : prepend
 
-  const call = listFn as unknown as (options: {
-    throwOnError: true
-  }) => Promise<{ data: ListItem<F>[] | Paginated<ListItem<F>> }>
-
   let cache: Promise<SelectOption[]> | undefined
   const options: OptionsLoader = () =>
-    (cache ??= call({ throwOnError: true }).then(({ data }) => {
-      const items = Array.isArray(data) ? data : data.results
-      return [
-        ...leading,
-        ...items.map((item) => ({
-          value: item[mapping.value],
-          label: String(item[mapping.label]),
-        })),
-      ]
-    }))
+    (cache ??= listFn().then((items) => [
+      ...leading,
+      ...items.map((item) => ({
+        value: item[mapping.value],
+        label: String(item[mapping.label]),
+      })),
+    ]))
 
   return { $formkit: 'dataSelect', options, ...fieldProps }
 }

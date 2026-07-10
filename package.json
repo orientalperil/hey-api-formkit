@@ -4,6 +4,10 @@
   "homepage": "https://github.com/orientalperil/hey-api-formkit",
   "type": "module",
   "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./*": {
       "types": "./dist/*.d.ts",
       "import": "./dist/*.js"
@@ -34,6 +38,8 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
-    "@hey-api/openapi-ts": "^0.99.0"
+    "@formkit/vue": "^2.1.0",
+    "@hey-api/openapi-ts": "^0.99.0",
+    "django-rest-framework-helpers": "^0.1.0"
   }
 }

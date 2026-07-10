@@ -5,7 +5,7 @@ import '@formkit/themes/genesis'
 
 import App from './App.vue'
 import router from './router'
-import { dataSelectInput } from './formkit/data-select'
+import { dataSelectInput } from 'hey-api-formkit'
 
 const app = createApp(App)
 

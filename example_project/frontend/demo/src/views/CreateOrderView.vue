@@ -6,8 +6,8 @@ import type { FormKitNode } from '@formkit/core'
 
 import { ordersCreate, productsList, type OrderWritable } from '@/client'
 import { OrderWritableFormKitSchema } from '@/client/formkit.gen'
-import { applyFieldOverrides } from '@/formkit/apply-overrides'
-import { dataSelect } from '@/formkit/data-select'
+import { applyFieldOverrides } from 'hey-api-formkit'
+import { dataSelect } from 'hey-api-formkit'
 import { fetchAll } from 'django-rest-framework-helpers/pagination'
 
 const router = useRouter()
