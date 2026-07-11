@@ -1,0 +1,9 @@
+/*
+ * Import Tailwind without its Preflight base reset. Preflight resets
+ * borders, form controls, etc., which clobbers Vuetify's own styling.
+ * We only need the utility classes (and theme tokens) here.
+ */
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);

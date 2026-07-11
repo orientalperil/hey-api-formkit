@@ -3,7 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-  <header class="app-header">
+  <header class="app-header px-8">
     <h1>Demo</h1>
     <nav>
       <RouterLink to="/">Home</RouterLink>
@@ -14,7 +14,7 @@ import { RouterLink, RouterView } from 'vue-router'
     </nav>
   </header>
 
-  <main>
+  <main class="px-8">
     <RouterView />
   </main>
 </template>
