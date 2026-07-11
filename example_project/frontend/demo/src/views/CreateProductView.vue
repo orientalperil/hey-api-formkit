@@ -22,6 +22,9 @@ const schema = vuetifyize(applyFieldOverrides(ProductWritableFormKitSchema, {
   category: dataSelect(() => fetchAll(categoriesList), { value: 'id', label: 'name' }, {
     nullable: true,
   }),
+  in_stock: {
+    validation: 'accepted',
+  },
 }))
 
 class ProductSubmitter extends HeyApiFormKitSubmitter<ProductWritable> {
