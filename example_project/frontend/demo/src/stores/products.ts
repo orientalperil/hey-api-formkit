@@ -12,8 +12,8 @@ export const useProductsStore = defineStore('products', () => {
     loading.value = true
     error.value = null
     try {
-      const { data } = await productsList({ throwOnError: true })
-      products.value = data
+      const { data } = await productsList()
+      products.value = data ?? []
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to load products'
     } finally {

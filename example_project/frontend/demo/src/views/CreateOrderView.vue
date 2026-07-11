@@ -2,13 +2,13 @@
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { FormKitSchema } from '@formkit/vue'
-import type { FormKitNode } from '@formkit/core'
 
 import { ordersCreate, productsList, type OrderWritable } from '@/client'
 import { OrderWritableFormKitSchema } from '@/client/formkit.gen'
 import { applyFieldOverrides } from 'hey-api-formkit'
 import { dataSelect } from 'hey-api-formkit'
 import { fetchAll } from 'django-rest-framework-helpers/pagination'
+import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
 
 const router = useRouter()
 
@@ -38,20 +38,21 @@ const data = reactive<{
   items_remove: (index: number) => () => removeRow(index),
 })
 
-async function onSubmit(values: OrderWritable, node?: FormKitNode) {
-  try {
-    await ordersCreate({ body: values, throwOnError: true })
+class OrderSubmitter extends HeyApiFormKitSubmitter<OrderWritable> {
+  override async action(data: OrderWritable) {
+    await ordersCreate({ body: data })
+  }
+  override async success() {
     await router.push('/orders')
-  } catch (e) {
-    node?.setErrors([e instanceof Error ? e.message : 'Failed to create order'])
   }
 }
+const submitter = new OrderSubmitter()
 </script>
 
 <template>
   <section>
     <h2>New order</h2>
-    <FormKit type="form" submit-label="Create order" @submit="onSubmit">
+    <FormKit type="form" submit-label="Create order" @submit="submitter.submit">
       <FormKitSchema :schema="schema" :data="data" />
       <button type="button" class="add-item" @click="addRow">+ Add item</button>
     </FormKit>

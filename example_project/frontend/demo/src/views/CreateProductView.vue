@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { FormKitSchema } from '@formkit/vue'
-import type { FormKitNode } from '@formkit/core'
 
 import { categoriesList, productsCreate, suppliersList, type ProductWritable } from '@/client'
 import { ProductWritableFormKitSchema } from '@/client/formkit.gen'
 import { fetchAll } from 'django-rest-framework-helpers/pagination'
 import { applyFieldOverrides } from 'hey-api-formkit'
 import { dataSelect } from 'hey-api-formkit'
+import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
 
 const router = useRouter()
 
@@ -23,20 +23,21 @@ const schema = applyFieldOverrides(ProductWritableFormKitSchema, {
   }),
 })
 
-async function onSubmit(values: ProductWritable, node?: FormKitNode) {
-  try {
-    await productsCreate({ body: values, throwOnError: true })
+class ProductSubmitter extends HeyApiFormKitSubmitter<ProductWritable> {
+  override async action(data: ProductWritable) {
+    await productsCreate({ body: data })
+  }
+  override async success() {
     await router.push('/products')
-  } catch (e) {
-    node?.setErrors([e instanceof Error ? e.message : 'Failed to create product'])
   }
 }
+const submitter = new ProductSubmitter()
 </script>
 
 <template>
   <section>
     <h2>New product</h2>
-    <FormKit type="form" :value="{ in_stock: true }" submit-label="Create product" @submit="onSubmit">
+    <FormKit type="form" :value="{ in_stock: true }" submit-label="Create product" @submit="submitter.submit">
       <FormKitSchema :schema="schema" />
     </FormKit>
   </section>

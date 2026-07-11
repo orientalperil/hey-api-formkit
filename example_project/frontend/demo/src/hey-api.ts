@@ -5,4 +5,6 @@ import type { CreateClientConfig } from '@/client/client.gen'
 export const createClientConfig: CreateClientConfig = (config) => ({
   ...config,
   baseUrl: import.meta.env.VITE_API_URL ?? 'http://localhost:8000',
+  // Throw on non-2xx so SDK calls surface errors to catch/await
+  throwOnError: true,
 })
