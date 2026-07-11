@@ -1,6 +1,6 @@
 {
   "name": "hey-api-formkit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/orientalperil/hey-api-formkit",
   "type": "module",
   "exports": {
