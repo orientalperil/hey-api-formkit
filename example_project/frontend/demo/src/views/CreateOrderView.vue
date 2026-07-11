@@ -6,9 +6,10 @@ import { FormKitSchema } from '@formkit/vue'
 import { ordersCreate, productsList, type OrderWritable } from '@/client'
 import { OrderWritableFormKitSchema } from '@/client/formkit.gen'
 import { applyFieldOverrides } from 'hey-api-formkit'
-import { dataSelect } from 'hey-api-formkit'
+import { dataSelect } from "formkit-heads"
 import { fetchAll } from 'django-rest-framework-helpers/pagination'
 import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
+import { vuetifyize } from "formkit-heads/vuetify"
 
 const router = useRouter()
 
@@ -16,11 +17,11 @@ const router = useRouter()
 // whose rows/remover it references as `$items_rows` and `$items_remove`
 // (supplied below). The nested `product` select fetches its own options; the
 // result is memoized, so every line item shares a single request.
-const schema = applyFieldOverrides(OrderWritableFormKitSchema, {
+const schema = vuetifyize(applyFieldOverrides(OrderWritableFormKitSchema, {
   product: dataSelect(() => fetchAll(productsList), { value: 'id', label: 'name' }, {
     placeholder: 'Select a product…',
   }),
-})
+}))
 
 let nextKey = 1
 function addRow() {
