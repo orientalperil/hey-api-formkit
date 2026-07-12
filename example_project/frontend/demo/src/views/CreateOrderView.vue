@@ -39,8 +39,7 @@ function vuetifyRemoveButtons(nodes: FormKitSchemaNode[]): FormKitSchemaNode[] {
       el.$cmp = 'VBtn'
       el.props = {
         color: 'error',
-        variant: 'text',
-        size: 'small',
+        variant: 'tonal',
         onClick: attrs.onClick,
       }
     }
@@ -88,9 +87,3 @@ const submitter = new OrderSubmitter()
     </FormKit>
   </section>
 </template>
-
-<style scoped>
-.add-item {
-  margin-bottom: 1rem;
-}
-</style>
