@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { plugin as formKitPlugin } from '@formkit/vue'
-import '@formkit/themes/genesis'
 import './assets/tailwind.css'
 
 import App from './App.vue'
