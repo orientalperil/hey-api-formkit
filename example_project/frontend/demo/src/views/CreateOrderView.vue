@@ -80,8 +80,8 @@ const submitter = new OrderSubmitter()
     <h2>New order</h2>
     <FormKit type="form" :actions="false" @submit="submitter.submit">
       <FormKitSchema :schema="schema" :data="data" :library="{ VBtn }" />
-      <v-btn variant="tonal" class="add-item" @click="addRow">+ Add item</v-btn>
-      <div>
+      <v-btn variant="tonal" class="ml-2" @click="addRow">+ Add item</v-btn>
+      <div class="mt-4">
         <v-btn type="submit" color="primary">Create order</v-btn>
       </div>
     </FormKit>
