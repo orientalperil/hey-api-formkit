@@ -19,8 +19,8 @@ export const vuetify = createVuetify({
     },
   },
   defaults: {
-    VTextField: { variant: 'outlined', density: 'comfortable' },
-    VTextarea: { variant: 'outlined', density: 'comfortable' },
-    VSelect: { variant: 'outlined', density: 'comfortable' },
+    VTextField: { variant: 'solo', density: 'comfortable' },
+    VTextarea: { variant: 'solo', density: 'comfortable' },
+    VSelect: { variant: 'solo', density: 'comfortable' },
   },
 })
