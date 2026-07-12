@@ -29,7 +29,11 @@ const schema = vuetifyOrderSchema(vuetifyize(applyFieldOverrides(OrderWritableFo
 // is a `group` whose fields render flat into the form (no wrapper element), so:
 //  - swap the row's plain <button class="formkit-remove"> for a Vuetify button
 //    (resolved via <FormKitSchema :library>) to match the rest of the form, and
-//  - give the row's first field a top margin so stacked subforms don't touch.
+//  - give the row's first field a top margin *between* rows only, gated on the
+//    `for` loop's `$index`. FormKit's expression compiler has no ternary, so we
+//    use a `&&` short-circuit: it yields 'mt-6' for rows after the first and
+//    `false` (ignored) for row 0, so the first row still lines up with the flat
+//    fields above it.
 function vuetifyOrderSchema(nodes: FormKitSchemaNode[]): FormKitSchemaNode[] {
   for (const node of nodes) {
     if (!node || typeof node !== 'object') continue
@@ -37,7 +41,7 @@ function vuetifyOrderSchema(nodes: FormKitSchemaNode[]): FormKitSchemaNode[] {
 
     if (el.$formkit === 'group' && Array.isArray(el.children)) {
       const first = el.children[0] as Record<string, unknown> | undefined
-      if (first && typeof first === 'object') first.outerClass = 'mt-6'
+      if (first && typeof first === 'object') first.outerClass = "$index > 0 && 'mt-6'"
     }
 
     const attrs = el.attrs as Record<string, unknown> | undefined
