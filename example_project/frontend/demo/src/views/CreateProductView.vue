@@ -41,8 +41,9 @@ const submitter = new ProductSubmitter()
 <template>
   <section>
     <h2>New product</h2>
-    <FormKit type="form" :value="{ in_stock: true }" submit-label="Create product" @submit="submitter.submit">
+    <FormKit type="form" :value="{ in_stock: true }" :actions="false" @submit="submitter.submit">
       <FormKitSchema :schema="schema" />
+      <v-btn type="submit" color="primary">Create product</v-btn>
     </FormKit>
   </section>
 </template>
