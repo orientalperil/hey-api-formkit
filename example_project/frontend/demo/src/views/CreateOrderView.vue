@@ -19,19 +19,27 @@ const router = useRouter()
 // whose rows/remover it references as `$items_rows` and `$items_remove`
 // (supplied below). The nested `product` select fetches its own options; the
 // result is memoized, so every line item shares a single request.
-const schema = vuetifyRemoveButtons(vuetifyize(applyFieldOverrides(OrderWritableFormKitSchema, {
+const schema = vuetifyOrderSchema(vuetifyize(applyFieldOverrides(OrderWritableFormKitSchema, {
   product: dataSelect(() => fetchAll(productsList), { value: 'id', label: 'name' }, {
     placeholder: 'Select a product…',
   }),
 })))
 
-// The generated schema renders each row's remover as a plain <button
-// class="formkit-remove">. Rewrite those nodes in place to Vuetify buttons
-// (resolved via <FormKitSchema :library>) so they match the rest of the form.
-function vuetifyRemoveButtons(nodes: FormKitSchemaNode[]): FormKitSchemaNode[] {
+// Post-process the generated schema for Vuetify. Each repeatable line-item row
+// is a `group` whose fields render flat into the form (no wrapper element), so:
+//  - swap the row's plain <button class="formkit-remove"> for a Vuetify button
+//    (resolved via <FormKitSchema :library>) to match the rest of the form, and
+//  - give the row's first field a top margin so stacked subforms don't touch.
+function vuetifyOrderSchema(nodes: FormKitSchemaNode[]): FormKitSchemaNode[] {
   for (const node of nodes) {
     if (!node || typeof node !== 'object') continue
     const el = node as Record<string, unknown>
+
+    if (el.$formkit === 'group' && Array.isArray(el.children)) {
+      const first = el.children[0] as Record<string, unknown> | undefined
+      if (first && typeof first === 'object') first.outerClass = 'mt-6'
+    }
+
     const attrs = el.attrs as Record<string, unknown> | undefined
     if (el.$el === 'button' && attrs?.class === 'formkit-remove') {
       delete el.$el
@@ -43,7 +51,8 @@ function vuetifyRemoveButtons(nodes: FormKitSchemaNode[]): FormKitSchemaNode[] {
         onClick: attrs.onClick,
       }
     }
-    if (Array.isArray(el.children)) vuetifyRemoveButtons(el.children as FormKitSchemaNode[])
+
+    if (Array.isArray(el.children)) vuetifyOrderSchema(el.children as FormKitSchemaNode[])
   }
   return nodes
 }
