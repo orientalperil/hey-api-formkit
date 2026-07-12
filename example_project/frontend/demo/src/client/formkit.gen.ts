@@ -48,42 +48,26 @@ export const OrderFormKitSchema: Array<FormKitSchemaNode> = [
     ],
   },
   {
-    $formkit: 'list',
+    $formkit: 'repeater',
     name: 'items',
     children: [
       {
-        $formkit: 'group',
-        for: ['row', 'index', '$items_rows'],
-        key: '$row.key',
-        children: [
-          {
-            $formkit: 'number',
-            name: 'product',
-            label: 'Product',
-            validation: 'required',
-          },
-          {
-            $formkit: 'number',
-            name: 'quantity',
-            label: 'Quantity',
-            validation: 'min:0|max:2147483647',
-          },
-          {
-            $formkit: 'text',
-            name: 'unit_price',
-            label: 'Unit price',
-            validation: 'required|number',
-          },
-          {
-            $el: 'button',
-            attrs: {
-              type: 'button',
-              class: 'formkit-remove',
-              onClick: '$items_remove($index)',
-            },
-            children: 'Remove',
-          },
-        ],
+        $formkit: 'number',
+        name: 'product',
+        label: 'Product',
+        validation: 'required',
+      },
+      {
+        $formkit: 'number',
+        name: 'quantity',
+        label: 'Quantity',
+        validation: 'min:0|max:2147483647',
+      },
+      {
+        $formkit: 'text',
+        name: 'unit_price',
+        label: 'Unit price',
+        validation: 'required|number',
       },
     ],
   },
@@ -156,42 +140,26 @@ export const PatchedOrderFormKitSchema: Array<FormKitSchemaNode> = [
     ],
   },
   {
-    $formkit: 'list',
+    $formkit: 'repeater',
     name: 'items',
     children: [
       {
-        $formkit: 'group',
-        for: ['row', 'index', '$items_rows'],
-        key: '$row.key',
-        children: [
-          {
-            $formkit: 'number',
-            name: 'product',
-            label: 'Product',
-            validation: 'required',
-          },
-          {
-            $formkit: 'number',
-            name: 'quantity',
-            label: 'Quantity',
-            validation: 'min:0|max:2147483647',
-          },
-          {
-            $formkit: 'text',
-            name: 'unit_price',
-            label: 'Unit price',
-            validation: 'required|number',
-          },
-          {
-            $el: 'button',
-            attrs: {
-              type: 'button',
-              class: 'formkit-remove',
-              onClick: '$items_remove($index)',
-            },
-            children: 'Remove',
-          },
-        ],
+        $formkit: 'number',
+        name: 'product',
+        label: 'Product',
+        validation: 'required',
+      },
+      {
+        $formkit: 'number',
+        name: 'quantity',
+        label: 'Quantity',
+        validation: 'min:0|max:2147483647',
+      },
+      {
+        $formkit: 'text',
+        name: 'unit_price',
+        label: 'Unit price',
+        validation: 'required|number',
       },
     ],
   },
@@ -344,42 +312,26 @@ export const OrderWritableFormKitSchema: Array<FormKitSchemaNode> = [
     ],
   },
   {
-    $formkit: 'list',
+    $formkit: 'repeater',
     name: 'items',
     children: [
       {
-        $formkit: 'group',
-        for: ['row', 'index', '$items_rows'],
-        key: '$row.key',
-        children: [
-          {
-            $formkit: 'number',
-            name: 'product',
-            label: 'Product',
-            validation: 'required',
-          },
-          {
-            $formkit: 'number',
-            name: 'quantity',
-            label: 'Quantity',
-            validation: 'min:0|max:2147483647',
-          },
-          {
-            $formkit: 'text',
-            name: 'unit_price',
-            label: 'Unit price',
-            validation: 'required|number',
-          },
-          {
-            $el: 'button',
-            attrs: {
-              type: 'button',
-              class: 'formkit-remove',
-              onClick: '$items_remove($index)',
-            },
-            children: 'Remove',
-          },
-        ],
+        $formkit: 'number',
+        name: 'product',
+        label: 'Product',
+        validation: 'required',
+      },
+      {
+        $formkit: 'number',
+        name: 'quantity',
+        label: 'Quantity',
+        validation: 'min:0|max:2147483647',
+      },
+      {
+        $formkit: 'text',
+        name: 'unit_price',
+        label: 'Unit price',
+        validation: 'required|number',
       },
     ],
   },
@@ -452,42 +404,26 @@ export const PatchedOrderWritableFormKitSchema: Array<FormKitSchemaNode> = [
     ],
   },
   {
-    $formkit: 'list',
+    $formkit: 'repeater',
     name: 'items',
     children: [
       {
-        $formkit: 'group',
-        for: ['row', 'index', '$items_rows'],
-        key: '$row.key',
-        children: [
-          {
-            $formkit: 'number',
-            name: 'product',
-            label: 'Product',
-            validation: 'required',
-          },
-          {
-            $formkit: 'number',
-            name: 'quantity',
-            label: 'Quantity',
-            validation: 'min:0|max:2147483647',
-          },
-          {
-            $formkit: 'text',
-            name: 'unit_price',
-            label: 'Unit price',
-            validation: 'required|number',
-          },
-          {
-            $el: 'button',
-            attrs: {
-              type: 'button',
-              class: 'formkit-remove',
-              onClick: '$items_remove($index)',
-            },
-            children: 'Remove',
-          },
-        ],
+        $formkit: 'number',
+        name: 'product',
+        label: 'Product',
+        validation: 'required',
+      },
+      {
+        $formkit: 'number',
+        name: 'quantity',
+        label: 'Quantity',
+        validation: 'min:0|max:2147483647',
+      },
+      {
+        $formkit: 'text',
+        name: 'unit_price',
+        label: 'Unit price',
+        validation: 'required|number',
       },
     ],
   },

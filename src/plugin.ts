@@ -18,8 +18,6 @@ import type { DefinePlugin, PluginInstance } from "@hey-api/openapi-ts"
 
 interface FormKitPluginConfig {
   name: string
-  /** Append a per-row "Remove" button inside repeatable array groups. */
-  arrayRemoveButton: boolean
 }
 
 // External symbols this plugin registers, exposed via `plugin.imports`.
@@ -97,11 +95,7 @@ function propertyToNode(
 }
 
 /** Convert one object schema into an array of FormKit nodes (skips read-only). */
-function objectToFormKitSchema(
-  schema: Schema,
-  schemas: Record<string, Schema>,
-  config: FormKitPluginConfig,
-): FormKitNode[] {
+function objectToFormKitSchema(schema: Schema, schemas: Record<string, Schema>): FormKitNode[] {
   const required: string[] = Array.isArray(schema.required) ? schema.required : []
   const nodes: FormKitNode[] = []
 
@@ -110,29 +104,15 @@ function objectToFormKitSchema(
     if (prop.readOnly) continue
 
     if (prop.type === "array" && prop.items) {
-      // Repeatable list of object items, driven by a reactive `$<name>_rows`
-      // array supplied at runtime. Add/remove is a runtime concern.
+      // Repeatable list of object items, emitted as a `repeater` input. The
+      // repeater owns its own row array and add/remove controls at runtime, so
+      // the fields render directly as its children
       const itemSchema = deref(prop.items as Schema, schemas)
-      const itemFields = objectToFormKitSchema(itemSchema, schemas, config)
-      if (config.arrayRemoveButton) {
-        itemFields.push({
-          $el: "button",
-          attrs: { type: "button", class: "formkit-remove", onClick: `$${name}_remove($index)` },
-          children: "Remove",
-        })
-      }
-      nodes.push({
-        $formkit: "list",
-        name,
-        children: [
-          {
-            $formkit: "group",
-            for: ["row", "index", `$${name}_rows`],
-            key: "$row.key",
-            children: itemFields,
-          },
-        ],
-      })
+      const itemFields = objectToFormKitSchema(itemSchema, schemas)
+      const repeater: FormKitNode = { $formkit: "repeater", name, children: itemFields }
+      if (typeof prop.minItems === "number") repeater.min = prop.minItems
+      if (typeof prop.maxItems === "number") repeater.max = prop.maxItems
+      nodes.push(repeater)
       continue
     }
 
@@ -151,15 +131,13 @@ const handler = ({ plugin }: { plugin: FormKitPlugin["Instance"] }) => {
   const schemas = spec.components?.schemas
   if (!schemas) return
 
-  const config = plugin.config as FormKitPluginConfig
-
   // `Array<FormKitSchemaNode>` (imported from '@formkit/core')
   const schemaNodeArray = $.type("Array").generic(plugin.imports.FormKitSchemaNode)
 
   for (const [name, schema] of Object.entries(schemas)) {
     if (schema?.type !== "object" || !schema.properties) continue
 
-    const nodes = objectToFormKitSchema(schema, schemas, config)
+    const nodes = objectToFormKitSchema(schema, schemas)
     const symbol = plugin.symbol(`${name}FormKitSchema`)
     // export const <Name>FormKitSchema: FormKitSchemaNode[] = [...]
     plugin.node(
@@ -172,9 +150,7 @@ const handler = ({ plugin }: { plugin: FormKitPlugin["Instance"] }) => {
 }
 
 export const formKitPlugin = definePluginConfig<FormKitPlugin["Types"]>({
-  config: {
-    arrayRemoveButton: true,
-  },
+  config: {},
   handler,
   // Emit `import type { FormKitSchemaNode } from '@formkit/core'` and expose it
   // as `plugin.imports.FormKitSchemaNode` for the annotation above.
