@@ -21,9 +21,14 @@ onMounted(() => store.fetchOrders())
   <section>
     <header>
       <h2>Orders</h2>
-      <button type="button" :disabled="loading" @click="store.fetchOrders()">
-        {{ loading ? 'Loading…' : 'Refresh' }}
-      </button>
+      <v-btn
+        prepend-icon="mdi-refresh"
+        variant="tonal"
+        :loading="loading"
+        @click="store.fetchOrders()"
+      >
+        Refresh
+      </v-btn>
     </header>
 
     <p v-if="error" class="error">{{ error }}</p>
