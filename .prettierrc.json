@@ -1,6 +1,11 @@
 {
   "semi": false,
   "printWidth": 100,
-  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
-  "importOrder": ["<BUILTIN_MODULES>", "<THIRD_PARTY_MODULES>", "", "^@/(.*)$"]
+  "plugins": [
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-jsdoc"
+  ],
+  "importOrder": ["<BUILTIN_MODULES>", "<THIRD_PARTY_MODULES>", "", "^@/(.*)$"],
+  "jsdocPrintWidth": 80,
+  "jsdocSpaces": 1
 }

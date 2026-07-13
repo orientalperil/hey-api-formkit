@@ -17,14 +17,15 @@
     "dist/"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "format": "prettier src --write",
     "format:check": "prettier src --check",
     "format:diff": "npx prettier --list-different src | while IFS= read -r f; do npx prettier \"$f\" > /tmp/pf-diff-tmp && git diff --no-index -- \"$f\" /tmp/pf-diff-tmp; done",
-    "prepare": "husky"
+    "prepare": "husky",
+    "prettier:diff": "for f in $(git diff --name-only --diff-filter=ACM); do npx prettier \"$f\" > /tmp/pf-diff-tmp && git diff --no-index -- \"$f\" /tmp/pf-diff-tmp; done"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
@@ -35,6 +36,7 @@
     "eslint-config-prettier": "^10.0.0",
     "husky": "^9.0.0",
     "prettier": "^3.0.0",
+    "prettier-plugin-jsdoc": "^1.8.1",
     "typescript": "^5.8.0",
     "vitest": "^3.0.0"
   },

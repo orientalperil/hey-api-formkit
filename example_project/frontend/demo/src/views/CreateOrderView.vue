@@ -18,7 +18,7 @@ const router = useRouter()
 // is memoized, so every line item shares a single request.
 const schema = vuetifyize(
   applyFieldOverrides(OrderWritableFormKitSchema, {
-    product: loaderSelect(
+    'items.product': loaderSelect(
       () => fetchAll(productsList),
       { value: 'id', label: 'name' },
       {
