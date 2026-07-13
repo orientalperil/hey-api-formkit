@@ -20,6 +20,22 @@ export const CategorySchema = {
   required: ['id', 'name', 'slug'],
 } as const
 
+export const LoginSchema = {
+  type: 'object',
+  description: 'Request body for the login endpoint.',
+  properties: {
+    username: {
+      type: 'string',
+      writeOnly: true,
+    },
+    password: {
+      type: 'string',
+      writeOnly: true,
+    },
+  },
+  required: ['password', 'username'],
+} as const
+
 export const OrderSchema = {
   type: 'object',
   properties: {
@@ -259,6 +275,18 @@ export const SupplierSchema = {
     },
   },
   required: ['id', 'name'],
+} as const
+
+export const TokenSchema = {
+  type: 'object',
+  description: 'Login response: the auth token to send as ``Authorization: Bearer``.',
+  properties: {
+    token: {
+      type: 'string',
+      readOnly: true,
+    },
+  },
+  required: ['token'],
 } as const
 
 export const CategoryWritableSchema = {

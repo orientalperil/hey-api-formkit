@@ -3,6 +3,19 @@ from rest_framework import serializers
 from core.models import Category, Order, OrderItem, Product, Supplier
 
 
+class LoginSerializer(serializers.Serializer):
+    """Request body for the login endpoint."""
+
+    username = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, style={'input_type': 'password'})
+
+
+class TokenSerializer(serializers.Serializer):
+    """Login response: the auth token to send as ``Authorization: Bearer``."""
+
+    token = serializers.CharField(read_only=True)
+
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

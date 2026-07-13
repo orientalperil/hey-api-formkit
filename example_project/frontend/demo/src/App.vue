@@ -1,5 +1,17 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+
+import { useAuthStore } from '@/stores/auth'
+
+const router = useRouter()
+const auth = useAuthStore()
+const { isAuthenticated } = storeToRefs(auth)
+
+function logout() {
+  auth.logout()
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -11,6 +23,8 @@ import { RouterLink, RouterView } from 'vue-router'
       <RouterLink to="/products/new">New product</RouterLink>
       <RouterLink to="/orders">Orders</RouterLink>
       <RouterLink to="/orders/new">New order</RouterLink>
+      <RouterLink v-if="!isAuthenticated" to="/login" class="right">Log in</RouterLink>
+      <button v-else type="button" class="right link" @click="logout">Log out</button>
     </nav>
   </header>
 
@@ -39,6 +53,19 @@ nav a {
 nav a.router-link-exact-active {
   font-weight: 700;
   color: #42b883;
+}
+
+nav .right {
+  margin-left: auto;
+}
+
+nav .link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: #2c3e50;
+  cursor: pointer;
 }
 
 main {

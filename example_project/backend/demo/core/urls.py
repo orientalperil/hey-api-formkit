@@ -1,7 +1,9 @@
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from core.views import (
     CategoryViewSet,
+    LoginView,
     OrderViewSet,
     ProductViewSet,
     SupplierViewSet,
@@ -13,4 +15,7 @@ router.register('suppliers', SupplierViewSet, basename='supplier')
 router.register('products', ProductViewSet, basename='product')
 router.register('orders', OrderViewSet, basename='order')
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('auth/login/', LoginView.as_view(), name='login'),
+    *router.urls,
+]

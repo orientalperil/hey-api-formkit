@@ -17,6 +17,21 @@ export const CategoryFormKitSchema: Array<FormKitSchemaNode> = [
   },
 ]
 
+export const LoginFormKitSchema: Array<FormKitSchemaNode> = [
+  {
+    $formkit: 'text',
+    name: 'username',
+    label: 'Username',
+    validation: 'required',
+  },
+  {
+    $formkit: 'text',
+    name: 'password',
+    label: 'Password',
+    validation: 'required',
+  },
+]
+
 export const OrderFormKitSchema: Array<FormKitSchemaNode> = [
   {
     $formkit: 'text',
@@ -265,6 +280,8 @@ export const SupplierFormKitSchema: Array<FormKitSchemaNode> = [
     validation: 'email|length:0,254',
   },
 ]
+
+export const TokenFormKitSchema: Array<FormKitSchemaNode> = []
 
 export const CategoryWritableFormKitSchema: Array<FormKitSchemaNode> = [
   {

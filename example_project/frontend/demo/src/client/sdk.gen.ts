@@ -15,6 +15,8 @@ import type {
   CategoriesRetrieveResponses,
   CategoriesUpdateData,
   CategoriesUpdateResponses,
+  LoginData,
+  LoginResponses,
   OrdersCreateData,
   OrdersCreateResponses,
   OrdersDestroyData,
@@ -72,6 +74,21 @@ export type Options<
 }
 
 /**
+ * Exchange a username and password for an auth token.
+ */
+export const login = <ThrowOnError extends boolean = false>(
+  options: Options<LoginData, ThrowOnError>,
+): RequestResult<LoginResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).post<LoginResponses, unknown, ThrowOnError>({
+    url: '/api/auth/login/',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  })
+
+/**
  * CRUD endpoints for product categories.
  */
 export const categoriesList = <ThrowOnError extends boolean = false>(
@@ -79,12 +96,12 @@ export const categoriesList = <ThrowOnError extends boolean = false>(
 ): RequestResult<CategoriesListResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<CategoriesListResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/categories/',
     ...options,
@@ -98,12 +115,12 @@ export const categoriesCreate = <ThrowOnError extends boolean = false>(
 ): RequestResult<CategoriesCreateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).post<CategoriesCreateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/categories/',
     ...options,
@@ -121,12 +138,12 @@ export const categoriesDestroy = <ThrowOnError extends boolean = false>(
 ): RequestResult<CategoriesDestroyResponses, unknown, ThrowOnError> =>
   (options.client ?? client).delete<CategoriesDestroyResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/categories/{id}/',
     ...options,
@@ -140,12 +157,12 @@ export const categoriesRetrieve = <ThrowOnError extends boolean = false>(
 ): RequestResult<CategoriesRetrieveResponses, unknown, ThrowOnError> =>
   (options.client ?? client).get<CategoriesRetrieveResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/categories/{id}/',
     ...options,
@@ -159,12 +176,12 @@ export const categoriesPartialUpdate = <ThrowOnError extends boolean = false>(
 ): RequestResult<CategoriesPartialUpdateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).patch<CategoriesPartialUpdateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/categories/{id}/',
     ...options,
@@ -182,12 +199,12 @@ export const categoriesUpdate = <ThrowOnError extends boolean = false>(
 ): RequestResult<CategoriesUpdateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).put<CategoriesUpdateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/categories/{id}/',
     ...options,
@@ -205,12 +222,12 @@ export const ordersList = <ThrowOnError extends boolean = false>(
 ): RequestResult<OrdersListResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<OrdersListResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/orders/',
     ...options,
@@ -224,12 +241,12 @@ export const ordersCreate = <ThrowOnError extends boolean = false>(
 ): RequestResult<OrdersCreateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).post<OrdersCreateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/orders/',
     ...options,
@@ -247,12 +264,12 @@ export const ordersDestroy = <ThrowOnError extends boolean = false>(
 ): RequestResult<OrdersDestroyResponses, unknown, ThrowOnError> =>
   (options.client ?? client).delete<OrdersDestroyResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/orders/{id}/',
     ...options,
@@ -266,12 +283,12 @@ export const ordersRetrieve = <ThrowOnError extends boolean = false>(
 ): RequestResult<OrdersRetrieveResponses, unknown, ThrowOnError> =>
   (options.client ?? client).get<OrdersRetrieveResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/orders/{id}/',
     ...options,
@@ -285,12 +302,12 @@ export const ordersPartialUpdate = <ThrowOnError extends boolean = false>(
 ): RequestResult<OrdersPartialUpdateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).patch<OrdersPartialUpdateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/orders/{id}/',
     ...options,
@@ -308,12 +325,12 @@ export const ordersUpdate = <ThrowOnError extends boolean = false>(
 ): RequestResult<OrdersUpdateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).put<OrdersUpdateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/orders/{id}/',
     ...options,
@@ -331,12 +348,12 @@ export const productsList = <ThrowOnError extends boolean = false>(
 ): RequestResult<ProductsListResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<ProductsListResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/products/',
     ...options,
@@ -350,12 +367,12 @@ export const productsCreate = <ThrowOnError extends boolean = false>(
 ): RequestResult<ProductsCreateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).post<ProductsCreateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/products/',
     ...options,
@@ -373,12 +390,12 @@ export const productsDestroy = <ThrowOnError extends boolean = false>(
 ): RequestResult<ProductsDestroyResponses, unknown, ThrowOnError> =>
   (options.client ?? client).delete<ProductsDestroyResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/products/{id}/',
     ...options,
@@ -392,12 +409,12 @@ export const productsRetrieve = <ThrowOnError extends boolean = false>(
 ): RequestResult<ProductsRetrieveResponses, unknown, ThrowOnError> =>
   (options.client ?? client).get<ProductsRetrieveResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/products/{id}/',
     ...options,
@@ -411,12 +428,12 @@ export const productsPartialUpdate = <ThrowOnError extends boolean = false>(
 ): RequestResult<ProductsPartialUpdateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).patch<ProductsPartialUpdateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/products/{id}/',
     ...options,
@@ -434,12 +451,12 @@ export const productsUpdate = <ThrowOnError extends boolean = false>(
 ): RequestResult<ProductsUpdateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).put<ProductsUpdateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/products/{id}/',
     ...options,
@@ -457,12 +474,12 @@ export const suppliersList = <ThrowOnError extends boolean = false>(
 ): RequestResult<SuppliersListResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<SuppliersListResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/suppliers/',
     ...options,
@@ -476,12 +493,12 @@ export const suppliersCreate = <ThrowOnError extends boolean = false>(
 ): RequestResult<SuppliersCreateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).post<SuppliersCreateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/suppliers/',
     ...options,
@@ -499,12 +516,12 @@ export const suppliersDestroy = <ThrowOnError extends boolean = false>(
 ): RequestResult<SuppliersDestroyResponses, unknown, ThrowOnError> =>
   (options.client ?? client).delete<SuppliersDestroyResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/suppliers/{id}/',
     ...options,
@@ -518,12 +535,12 @@ export const suppliersRetrieve = <ThrowOnError extends boolean = false>(
 ): RequestResult<SuppliersRetrieveResponses, unknown, ThrowOnError> =>
   (options.client ?? client).get<SuppliersRetrieveResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/suppliers/{id}/',
     ...options,
@@ -537,12 +554,12 @@ export const suppliersPartialUpdate = <ThrowOnError extends boolean = false>(
 ): RequestResult<SuppliersPartialUpdateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).patch<SuppliersPartialUpdateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/suppliers/{id}/',
     ...options,
@@ -560,12 +577,12 @@ export const suppliersUpdate = <ThrowOnError extends boolean = false>(
 ): RequestResult<SuppliersUpdateResponses, unknown, ThrowOnError> =>
   (options.client ?? client).put<SuppliersUpdateResponses, unknown, ThrowOnError>({
     security: [
+      { scheme: 'bearer', type: 'http' },
       {
         in: 'cookie',
         name: 'sessionid',
         type: 'apiKey',
       },
-      { scheme: 'basic', type: 'http' },
     ],
     url: '/api/suppliers/{id}/',
     ...options,

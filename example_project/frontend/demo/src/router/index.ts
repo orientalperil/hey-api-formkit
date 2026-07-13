@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { getToken } from '@/auth-token'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -7,6 +9,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('@/views/HomeView.vue'),
+    },
+    {
+      path: '/login',
+      name: 'login',
+      meta: { public: true },
+      component: () => import('@/views/LoginView.vue'),
     },
     {
       path: '/products',
@@ -29,6 +37,18 @@ const router = createRouter({
       component: () => import('@/views/CreateOrderView.vue'),
     },
   ],
+})
+
+// Auth guard: every route except those marked `public` needs a token.
+// Unauthenticated visitors are redirected to /login (preserving the target).
+router.beforeEach((to) => {
+  const authed = getToken() !== null
+  if (!to.meta.public && !authed) {
+    return { name: 'login', query: { redirect: to.fullPath } }
+  }
+  if (to.name === 'login' && authed) {
+    return { path: '/' }
+  }
 })
 
 export default router

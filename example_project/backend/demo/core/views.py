@@ -1,13 +1,39 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from core.models import Category, Order, Product, Supplier
 from core.serializers import (
     CategorySerializer,
+    LoginSerializer,
     OrderSerializer,
     ProductSerializer,
     SupplierSerializer,
+    TokenSerializer,
 )
+
+
+class LoginView(APIView):
+    """Exchange a username and password for an auth token."""
+
+    authentication_classes = []  # logging in must not require being logged in
+    permission_classes = [AllowAny]
+
+    @extend_schema(
+        request=LoginSerializer,
+        responses=TokenSerializer,
+        operation_id='login',
+        tags=['Auth'],
+    )
+    def post(self, request):
+        serializer = AuthTokenSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        token, _ = Token.objects.get_or_create(user=serializer.validated_data['user'])
+        return Response({'token': token.key})
 
 
 @extend_schema(tags=['Categories'])

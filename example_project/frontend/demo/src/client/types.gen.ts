@@ -10,6 +10,14 @@ export type Category = {
   slug: string
 }
 
+/**
+ * Request body for the login endpoint.
+ */
+export type Login = {
+  username: string
+  password: string
+}
+
 export type Order = {
   readonly id: number
   customer_name: string
@@ -99,6 +107,13 @@ export type Supplier = {
   email?: string
 }
 
+/**
+ * Login response: the auth token to send as ``Authorization: Bearer``.
+ */
+export type Token = {
+  readonly token: string
+}
+
 export type CategoryWritable = {
   name: string
   slug: string
@@ -154,6 +169,19 @@ export type SupplierWritable = {
   name: string
   email?: string
 }
+
+export type LoginData = {
+  body: Login
+  path?: never
+  query?: never
+  url: '/api/auth/login/'
+}
+
+export type LoginResponses = {
+  200: Token
+}
+
+export type LoginResponse = LoginResponses[keyof LoginResponses]
 
 export type CategoriesListData = {
   body?: never
