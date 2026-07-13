@@ -6,7 +6,7 @@ import OrderList from '@/components/OrderList.vue'
 
 <template>
   <div>
-    <RouterLink to="/orders/new">+ New order</RouterLink>
+    <RouterLink :to="{ name: 'order-create' }">+ New order</RouterLink>
     <OrderList />
   </div>
 </template>

@@ -42,7 +42,11 @@ onMounted(() => store.fetchOrders())
           <span class="customer">{{ order.customer_name }}</span>
           <span class="head-actions">
             <span class="status" :class="order.status">{{ order.status }}</span>
-            <RouterLink :to="`/orders/${order.id}/edit`" class="edit-link" aria-label="Edit order">
+            <RouterLink
+              :to="{ name: 'order-edit', params: { id: order.id } }"
+              class="edit-link"
+              aria-label="Edit order"
+            >
               <v-icon icon="mdi-pencil" size="small" />
             </RouterLink>
           </span>

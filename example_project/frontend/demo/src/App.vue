@@ -10,7 +10,7 @@ const { isAuthenticated } = storeToRefs(auth)
 
 function logout() {
   auth.logout()
-  router.push('/login')
+  router.push({ name: 'login' })
 }
 </script>
 
@@ -18,12 +18,12 @@ function logout() {
   <header class="app-header px-8">
     <h1>Demo</h1>
     <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/products">Products</RouterLink>
-      <RouterLink to="/products/new">New product</RouterLink>
-      <RouterLink to="/orders">Orders</RouterLink>
-      <RouterLink to="/orders/new">New order</RouterLink>
-      <RouterLink v-if="!isAuthenticated" to="/login" class="right">Log in</RouterLink>
+      <RouterLink :to="{ name: 'home' }">Home</RouterLink>
+      <RouterLink :to="{ name: 'products' }">Products</RouterLink>
+      <RouterLink :to="{ name: 'product-create' }">New product</RouterLink>
+      <RouterLink :to="{ name: 'orders' }">Orders</RouterLink>
+      <RouterLink :to="{ name: 'order-create' }">New order</RouterLink>
+      <RouterLink v-if="!isAuthenticated" :to="{ name: 'login' }" class="right">Log in</RouterLink>
       <button v-else type="button" class="right link" @click="logout">Log out</button>
     </nav>
   </header>

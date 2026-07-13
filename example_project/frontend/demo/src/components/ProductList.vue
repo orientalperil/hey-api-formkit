@@ -36,7 +36,7 @@ onMounted(() => store.fetchProducts())
           <span class="head-actions">
             <span class="price">${{ product.price }}</span>
             <RouterLink
-              :to="`/products/${product.id}/edit`"
+              :to="{ name: 'product-edit', params: { id: product.id } }"
               class="edit-link"
               aria-label="Edit product"
             >

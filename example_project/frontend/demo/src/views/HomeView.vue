@@ -10,10 +10,10 @@ import { RouterLink } from 'vue-router'
       <a href="https://heyapi.dev/" target="_blank" rel="noopener">hey-api</a> generated client.
     </p>
     <ul>
-      <li><RouterLink to="/products">Browse products</RouterLink></li>
-      <li><RouterLink to="/products/new">Create a product</RouterLink></li>
-      <li><RouterLink to="/orders">Browse orders</RouterLink></li>
-      <li><RouterLink to="/orders/new">Create an order</RouterLink></li>
+      <li><RouterLink :to="{ name: 'products' }">Browse products</RouterLink></li>
+      <li><RouterLink :to="{ name: 'product-create' }">Create a product</RouterLink></li>
+      <li><RouterLink :to="{ name: 'orders' }">Browse orders</RouterLink></li>
+      <li><RouterLink :to="{ name: 'order-create' }">Create an order</RouterLink></li>
     </ul>
   </section>
 </template>

@@ -46,7 +46,7 @@ class ProductSubmitter extends HeyApiFormKitSubmitter<ProductWritable> {
     await productsUpdate({ path: { id: productId }, body: data })
   }
   override async success() {
-    await router.push('/products')
+    await router.push({ name: 'products' })
   }
 }
 const submitter = new ProductSubmitter()

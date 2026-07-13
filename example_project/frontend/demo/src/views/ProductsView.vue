@@ -6,7 +6,7 @@ import ProductList from '@/components/ProductList.vue'
 
 <template>
   <div>
-    <RouterLink to="/products/new">+ New product</RouterLink>
+    <RouterLink :to="{ name: 'product-create' }">+ New product</RouterLink>
     <ProductList />
   </div>
 </template>

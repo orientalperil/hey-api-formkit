@@ -35,7 +35,7 @@ class OrderSubmitter extends HeyApiFormKitSubmitter<OrderWritable> {
     await ordersUpdate({ path: { id: orderId }, body: data })
   }
   override async success() {
-    await router.push('/orders')
+    await router.push({ name: 'orders' })
   }
 }
 const submitter = new OrderSubmitter()
