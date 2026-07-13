@@ -24,7 +24,7 @@
     "lint": "eslint src --ext .ts",
     "format": "prettier src --write",
     "format:check": "prettier src --check",
-    "format:diff": "npx prettier --list-different src | while IFS= read -r f; do npx prettier \"$f\" > /tmp/pf-diff-tmp && git diff --no-index -- \"$f\" /tmp/pf-diff-tmp; done",
+    "format:diff": "prettier-differ",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -43,6 +43,7 @@
   "dependencies": {
     "@formkit/vue": "^2.1.0",
     "@hey-api/openapi-ts": "^0.99.0",
-    "django-rest-framework-helpers": "^0.1.0"
+    "django-rest-framework-helpers": "^0.1.0",
+    "prettier-differ": "^0.1.0"
   }
 }
