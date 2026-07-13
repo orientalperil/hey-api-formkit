@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { defineStore } from "pinia"
+import { ref } from "vue"
 
-import { ordersList, type Order } from '@/client'
+import { ordersList, type Order } from "@/client"
 
-export const useOrdersStore = defineStore('orders', () => {
+export const useOrdersStore = defineStore("orders", () => {
   const orders = ref<Order[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -15,7 +15,7 @@ export const useOrdersStore = defineStore('orders', () => {
       const { data } = await ordersList()
       orders.value = data ?? []
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to load orders'
+      error.value = e instanceof Error ? e.message : "Failed to load orders"
     } finally {
       loading.value = false
     }

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { FormKitSchema } from '@formkit/vue'
-import { fetchAll } from 'django-rest-framework-helpers/pagination'
-import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
-import { loaderSelect } from 'formkit-heads'
-import { vuetifyize } from 'formkit-heads/vuetify'
-import { applyFieldOverrides } from 'hey-api-formkit'
-import { useRouter } from 'vue-router'
+import { FormKitSchema } from "@formkit/vue"
+import { fetchAll } from "django-rest-framework-helpers/pagination"
+import { HeyApiFormKitSubmitter } from "django-rest-framework-helpers/submitters/formkit"
+import { loaderSelect } from "formkit-heads"
+import { vuetifyize } from "formkit-heads/vuetify"
+import { applyFieldOverrides } from "hey-api-formkit"
+import { useRouter } from "vue-router"
 
-import { ordersCreate, productsList, type OrderWritable } from '@/client'
-import { OrderWritableFormKitSchema } from '@/client/formkit.gen'
+import { ordersCreate, productsList, type OrderWritable } from "@/client"
+import { OrderWritableFormKitSchema } from "@/client/formkit.gen"
 
 const router = useRouter()
 
@@ -21,12 +21,12 @@ const schema = vuetifyize(
     items: { min: 1 },
     // Carried through so an edit can match rows back to their OrderItem; a
     // new row here has no pk, which the backend treats as "create new".
-    'items.pk': { $formkit: 'hidden' },
-    'items.product': loaderSelect(
+    "items.pk": { $formkit: "hidden" },
+    "items.product": loaderSelect(
       () => fetchAll(productsList),
-      { value: 'id', label: 'name' },
+      { value: "id", label: "name" },
       {
-        placeholder: 'Select a product…',
+        placeholder: "Select a product…",
       },
     ),
   }),
@@ -37,7 +37,7 @@ class OrderSubmitter extends HeyApiFormKitSubmitter<OrderWritable> {
     await ordersCreate({ body: data })
   }
   override async success() {
-    await router.push({ name: 'orders' })
+    await router.push({ name: "orders" })
   }
 }
 const submitter = new OrderSubmitter()

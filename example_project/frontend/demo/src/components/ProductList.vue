@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
+import { storeToRefs } from "pinia"
+import { onMounted } from "vue"
+import { RouterLink } from "vue-router"
 
-import { useProductsStore } from '@/stores/products'
+import { useProductsStore } from "@/stores/products"
 
 const store = useProductsStore()
 const { products, loading, error } = storeToRefs(store)
@@ -50,7 +50,7 @@ onMounted(() => store.fetchProducts())
         </div>
         <p v-if="product.description" class="my-1 text-gray-600">{{ product.description }}</p>
         <span class="text-sm" :class="product.in_stock ? 'text-green-700' : 'text-red-700'">
-          {{ product.in_stock ? 'In stock' : 'Out of stock' }}
+          {{ product.in_stock ? "In stock" : "Out of stock" }}
         </span>
       </li>
     </ul>

@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { FormKitSchema } from '@formkit/vue'
-import { fetchAll } from 'django-rest-framework-helpers/pagination'
-import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
-import { loaderSelect } from 'formkit-heads'
-import { vuetifyize } from 'formkit-heads/vuetify'
-import { applyFieldOverrides } from 'hey-api-formkit'
-import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { FormKitSchema } from "@formkit/vue"
+import { fetchAll } from "django-rest-framework-helpers/pagination"
+import { HeyApiFormKitSubmitter } from "django-rest-framework-helpers/submitters/formkit"
+import { loaderSelect } from "formkit-heads"
+import { vuetifyize } from "formkit-heads/vuetify"
+import { applyFieldOverrides } from "hey-api-formkit"
+import { onMounted, ref } from "vue"
+import { useRoute, useRouter } from "vue-router"
 
-import { ordersRetrieve, ordersUpdate, productsList, type OrderWritable } from '@/client'
-import { OrderWritableFormKitSchema } from '@/client/formkit.gen'
+import { ordersRetrieve, ordersUpdate, productsList, type OrderWritable } from "@/client"
+import { OrderWritableFormKitSchema } from "@/client/formkit.gen"
 
 const route = useRoute()
 const router = useRouter()
@@ -22,12 +22,12 @@ const schema = vuetifyize(
     items: { min: 1 },
     // Carried through (hidden) so the backend can match a row back to its
     // OrderItem on save instead of deleting and recreating every item.
-    'items.pk': { $formkit: 'hidden' },
-    'items.product': loaderSelect(
+    "items.pk": { $formkit: "hidden" },
+    "items.product": loaderSelect(
       () => fetchAll(productsList),
-      { value: 'id', label: 'name' },
+      { value: "id", label: "name" },
       {
-        placeholder: 'Select a product…',
+        placeholder: "Select a product…",
       },
     ),
   }),
@@ -38,7 +38,7 @@ class OrderSubmitter extends HeyApiFormKitSubmitter<OrderWritable> {
     await ordersUpdate({ path: { id: orderId }, body: data })
   }
   override async success() {
-    await router.push({ name: 'orders' })
+    await router.push({ name: "orders" })
   }
 }
 const submitter = new OrderSubmitter()

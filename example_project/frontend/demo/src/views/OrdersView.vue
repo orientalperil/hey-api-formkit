@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { RouterLink } from "vue-router"
 
-import OrderList from '@/components/OrderList.vue'
+import OrderList from "@/components/OrderList.vue"
 </script>
 
 <template>

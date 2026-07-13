@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
+import { storeToRefs } from "pinia"
+import { onMounted } from "vue"
+import { RouterLink } from "vue-router"
 
-import { useOrdersStore } from '@/stores/orders'
+import { useOrdersStore } from "@/stores/orders"
 
 const store = useOrdersStore()
 const { orders, loading, error } = storeToRefs(store)
 
-const dateFormat = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+const dateFormat = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" })
 
 const statusClasses: Record<string, string> = {
-  pending: 'bg-gray-200 text-gray-600',
-  paid: 'bg-green-100 text-green-800',
-  shipped: 'bg-green-100 text-green-800',
-  cancelled: 'bg-red-100 text-red-700',
+  pending: "bg-gray-200 text-gray-600",
+  paid: "bg-green-100 text-green-800",
+  shipped: "bg-green-100 text-green-800",
+  cancelled: "bg-red-100 text-red-700",
 }
 
 function orderTotal(items: { quantity?: number; unit_price: string }[]): string {
@@ -69,7 +69,7 @@ onMounted(() => store.fetchOrders())
         </div>
         <p class="my-1 text-gray-600 text-sm">
           #{{ order.id }} · {{ dateFormat.format(new Date(order.created_at)) }} ·
-          {{ order.items.length }} item{{ order.items.length === 1 ? '' : 's' }} ·
+          {{ order.items.length }} item{{ order.items.length === 1 ? "" : "s" }} ·
           <strong>${{ orderTotal(order.items) }}</strong>
         </p>
         <ul class="list-none p-0 m-0 text-sm">

@@ -1,50 +1,50 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router"
 
-import { getToken } from '@/auth-token'
+import { getToken } from "@/auth-token"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: () => import('@/views/HomeView.vue'),
+      path: "/",
+      name: "home",
+      component: () => import("@/views/HomeView.vue"),
     },
     {
-      path: '/login',
-      name: 'login',
+      path: "/login",
+      name: "login",
       meta: { public: true },
-      component: () => import('@/views/LoginView.vue'),
+      component: () => import("@/views/LoginView.vue"),
     },
     {
-      path: '/products',
-      name: 'products',
-      component: () => import('@/views/ProductsView.vue'),
+      path: "/products",
+      name: "products",
+      component: () => import("@/views/ProductsView.vue"),
     },
     {
-      path: '/products/new',
-      name: 'product-create',
-      component: () => import('@/views/CreateProductView.vue'),
+      path: "/products/new",
+      name: "product-create",
+      component: () => import("@/views/CreateProductView.vue"),
     },
     {
-      path: '/products/:id/edit',
-      name: 'product-edit',
-      component: () => import('@/views/EditProductView.vue'),
+      path: "/products/:id/edit",
+      name: "product-edit",
+      component: () => import("@/views/EditProductView.vue"),
     },
     {
-      path: '/orders',
-      name: 'orders',
-      component: () => import('@/views/OrdersView.vue'),
+      path: "/orders",
+      name: "orders",
+      component: () => import("@/views/OrdersView.vue"),
     },
     {
-      path: '/orders/new',
-      name: 'order-create',
-      component: () => import('@/views/CreateOrderView.vue'),
+      path: "/orders/new",
+      name: "order-create",
+      component: () => import("@/views/CreateOrderView.vue"),
     },
     {
-      path: '/orders/:id/edit',
-      name: 'order-edit',
-      component: () => import('@/views/EditOrderView.vue'),
+      path: "/orders/:id/edit",
+      name: "order-edit",
+      component: () => import("@/views/EditOrderView.vue"),
     },
   ],
 })
@@ -54,10 +54,10 @@ const router = createRouter({
 router.beforeEach((to) => {
   const authed = getToken() !== null
   if (!to.meta.public && !authed) {
-    return { name: 'login', query: { redirect: to.fullPath } }
+    return { name: "login", query: { redirect: to.fullPath } }
   }
-  if (to.name === 'login' && authed) {
-    return { path: '/' }
+  if (to.name === "login" && authed) {
+    return { path: "/" }
   }
 })
 

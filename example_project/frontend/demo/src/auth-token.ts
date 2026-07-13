@@ -2,7 +2,7 @@
 // hey-api runtime config (src/hey-api.ts). Kept dependency-free so neither of
 // those creates an import cycle through the generated client.
 
-const TOKEN_KEY = 'token'
+const TOKEN_KEY = "token"
 
 export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY)

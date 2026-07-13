@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { FormKitSchema } from '@formkit/vue'
-import { fetchAll } from 'django-rest-framework-helpers/pagination'
-import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
-import { loaderSelect } from 'formkit-heads'
-import { vuetifyize } from 'formkit-heads/vuetify'
-import { applyFieldOverrides } from 'hey-api-formkit'
-import { useRouter } from 'vue-router'
+import { FormKitSchema } from "@formkit/vue"
+import { fetchAll } from "django-rest-framework-helpers/pagination"
+import { HeyApiFormKitSubmitter } from "django-rest-framework-helpers/submitters/formkit"
+import { loaderSelect } from "formkit-heads"
+import { vuetifyize } from "formkit-heads/vuetify"
+import { applyFieldOverrides } from "hey-api-formkit"
+import { useRouter } from "vue-router"
 
-import { categoriesList, productsCreate, suppliersList, type ProductWritable } from '@/client'
-import { ProductWritableFormKitSchema } from '@/client/formkit.gen'
+import { categoriesList, productsCreate, suppliersList, type ProductWritable } from "@/client"
+import { ProductWritableFormKitSchema } from "@/client/formkit.gen"
 
 const router = useRouter()
 
@@ -19,20 +19,20 @@ const schema = vuetifyize(
   applyFieldOverrides(ProductWritableFormKitSchema, {
     supplier: loaderSelect(
       () => fetchAll(suppliersList),
-      { value: 'id', label: 'name' },
+      { value: "id", label: "name" },
       {
-        placeholder: 'Select a supplier…',
+        placeholder: "Select a supplier…",
       },
     ),
     category: loaderSelect(
       () => fetchAll(categoriesList),
-      { value: 'id', label: 'name' },
+      { value: "id", label: "name" },
       {
         nullable: true,
       },
     ),
     in_stock: {
-      validation: 'accepted',
+      validation: "accepted",
     },
   }),
 )
@@ -42,7 +42,7 @@ class ProductSubmitter extends HeyApiFormKitSubmitter<ProductWritable> {
     await productsCreate({ body: data })
   }
   override async success() {
-    await router.push({ name: 'products' })
+    await router.push({ name: "products" })
   }
 }
 const submitter = new ProductSubmitter()

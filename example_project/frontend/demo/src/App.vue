@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { storeToRefs } from "pinia"
+import { RouterLink, RouterView, useRouter } from "vue-router"
 
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from "@/stores/auth"
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -10,7 +10,7 @@ const { isAuthenticated } = storeToRefs(auth)
 
 function logout() {
   auth.logout()
-  router.push({ name: 'login' })
+  router.push({ name: "login" })
 }
 </script>
 
