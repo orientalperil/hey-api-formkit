@@ -44,7 +44,11 @@ onMounted(() => store.fetchOrders())
     <p v-else-if="orders.length === 0">No orders yet.</p>
 
     <ul v-else class="mt-4 flex flex-col gap-3 list-none p-0">
-      <li v-for="order in orders" :key="order.id" class="border border-gray-300 rounded-lg px-4 py-3">
+      <li
+        v-for="order in orders"
+        :key="order.id"
+        class="border border-gray-300 rounded-lg px-4 py-3"
+      >
         <div class="flex justify-between font-semibold">
           <span>{{ order.customer_name }}</span>
           <span class="flex items-center gap-2">

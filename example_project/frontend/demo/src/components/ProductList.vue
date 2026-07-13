@@ -30,7 +30,11 @@ onMounted(() => store.fetchProducts())
     <p v-else-if="products.length === 0">No products yet.</p>
 
     <ul v-else class="mt-4 flex flex-col gap-3 list-none p-0">
-      <li v-for="product in products" :key="product.id" class="border border-gray-300 rounded-lg px-4 py-3">
+      <li
+        v-for="product in products"
+        :key="product.id"
+        class="border border-gray-300 rounded-lg px-4 py-3"
+      >
         <div class="flex justify-between font-semibold">
           <span>{{ product.name }}</span>
           <span class="flex items-center gap-2">
