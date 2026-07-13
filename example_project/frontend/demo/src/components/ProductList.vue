@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+import { onMounted } from 'vue'
 
 import { useProductsStore } from '@/stores/products'
 

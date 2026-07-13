@@ -1,31 +1,41 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import { FormKitSchema } from '@formkit/vue'
+import { fetchAll } from 'django-rest-framework-helpers/pagination'
+import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
+import { loaderSelect } from 'formkit-heads'
+import { vuetifyize } from 'formkit-heads/vuetify'
+import { applyFieldOverrides } from 'hey-api-formkit'
+import { useRouter } from 'vue-router'
 
 import { categoriesList, productsCreate, suppliersList, type ProductWritable } from '@/client'
 import { ProductWritableFormKitSchema } from '@/client/formkit.gen'
-import { fetchAll } from 'django-rest-framework-helpers/pagination'
-import { applyFieldOverrides } from 'hey-api-formkit'
-import { loaderSelect } from "formkit-heads"
-import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
-import { vuetifyize } from "formkit-heads/vuetify"
 
 const router = useRouter()
 
 // The generated schema is app-agnostic; wire this app's relation selects here.
 // Each select fetches its own options from the SDK endpoint — no reactive data
 // or onMounted needed. Just point it at the list call and map value/label.
-const schema = vuetifyize(applyFieldOverrides(ProductWritableFormKitSchema, {
-  supplier: loaderSelect(() => fetchAll(suppliersList), { value: 'id', label: 'name' }, {
-    placeholder: 'Select a supplier…',
+const schema = vuetifyize(
+  applyFieldOverrides(ProductWritableFormKitSchema, {
+    supplier: loaderSelect(
+      () => fetchAll(suppliersList),
+      { value: 'id', label: 'name' },
+      {
+        placeholder: 'Select a supplier…',
+      },
+    ),
+    category: loaderSelect(
+      () => fetchAll(categoriesList),
+      { value: 'id', label: 'name' },
+      {
+        nullable: true,
+      },
+    ),
+    in_stock: {
+      validation: 'accepted',
+    },
   }),
-  category: loaderSelect(() => fetchAll(categoriesList), { value: 'id', label: 'name' }, {
-    nullable: true,
-  }),
-  in_stock: {
-    validation: 'accepted',
-  },
-}))
+)
 
 class ProductSubmitter extends HeyApiFormKitSubmitter<ProductWritable> {
   override async action(data: ProductWritable) {

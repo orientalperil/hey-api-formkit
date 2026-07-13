@@ -1,9 +1,8 @@
-import { describe, it, expect } from 'vitest'
-
+import App from '../App.vue'
 import { mount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
-import { createRouter, createMemoryHistory } from 'vue-router'
-import App from '../App.vue'
+import { describe, expect, it } from 'vitest'
+import { createMemoryHistory, createRouter } from 'vue-router'
 
 const router = createRouter({
   history: createMemoryHistory(),

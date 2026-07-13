@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 
 import { useAuthStore } from '@/stores/auth'
 

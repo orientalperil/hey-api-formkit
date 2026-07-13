@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
 import { FormKitSchema } from '@formkit/vue'
+import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
+import { vuetifyize } from 'formkit-heads/vuetify'
+import { applyFieldOverrides } from 'hey-api-formkit'
+import { useRoute, useRouter } from 'vue-router'
 
 import { type Login } from '@/client'
 import { LoginFormKitSchema } from '@/client/formkit.gen'
-import { applyFieldOverrides } from 'hey-api-formkit'
-import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
-import { vuetifyize } from 'formkit-heads/vuetify'
-
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
@@ -17,10 +16,12 @@ const auth = useAuthStore()
 // Generated login schema; `password` is a plain string in the API. Keep the
 // input as text (so vuetifyize maps it to the vuetify text field) but mask it
 // via `inputType`, which the vuetify TextInput forwards to the v-text-field.
-const schema = vuetifyize(applyFieldOverrides(LoginFormKitSchema, {
-  username: { vuetifyProps: { autocomplete: 'username' } },
-  password: { inputType: 'password', vuetifyProps: { autocomplete: 'current-password' } },
-}))
+const schema = vuetifyize(
+  applyFieldOverrides(LoginFormKitSchema, {
+    username: { vuetifyProps: { autocomplete: 'username' } },
+    password: { inputType: 'password', vuetifyProps: { autocomplete: 'current-password' } },
+  }),
+)
 
 class LoginSubmitter extends HeyApiFormKitSubmitter<Login> {
   override async action(data: Login) {

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import { FormKitSchema } from '@formkit/vue'
+import { fetchAll } from 'django-rest-framework-helpers/pagination'
+import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
+import { loaderSelect } from 'formkit-heads'
+import { vuetifyize } from 'formkit-heads/vuetify'
+import { applyFieldOverrides } from 'hey-api-formkit'
+import { useRouter } from 'vue-router'
 
 import { ordersCreate, productsList, type OrderWritable } from '@/client'
 import { OrderWritableFormKitSchema } from '@/client/formkit.gen'
-import { applyFieldOverrides } from 'hey-api-formkit'
-import { loaderSelect } from 'formkit-heads'
-import { fetchAll } from 'django-rest-framework-helpers/pagination'
-import { HeyApiFormKitSubmitter } from 'django-rest-framework-helpers/submitters/formkit'
-import { vuetifyize } from 'formkit-heads/vuetify'
 
 const router = useRouter()
 
@@ -16,11 +16,17 @@ const router = useRouter()
 // own row array and add/remove controls, so the view supplies no repeat
 // scaffolding. The nested `product` select fetches its own options; the result
 // is memoized, so every line item shares a single request.
-const schema = vuetifyize(applyFieldOverrides(OrderWritableFormKitSchema, {
-  product: loaderSelect(() => fetchAll(productsList), { value: 'id', label: 'name' }, {
-    placeholder: 'Select a product…',
+const schema = vuetifyize(
+  applyFieldOverrides(OrderWritableFormKitSchema, {
+    product: loaderSelect(
+      () => fetchAll(productsList),
+      { value: 'id', label: 'name' },
+      {
+        placeholder: 'Select a product…',
+      },
+    ),
   }),
-}))
+)
 
 class OrderSubmitter extends HeyApiFormKitSubmitter<OrderWritable> {
   override async action(data: OrderWritable) {
