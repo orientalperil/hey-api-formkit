@@ -14,7 +14,8 @@
     "lint": "run-s \"lint:*\"",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "format:diff": "npx prettier --list-different src | while IFS= read -r f; do npx prettier \"$f\" > /tmp/pf-diff-tmp && git diff --no-index -- \"$f\" /tmp/pf-diff-tmp; done"
   },
   "dependencies": {
     "@formkit/vue": "^2.1.0",
