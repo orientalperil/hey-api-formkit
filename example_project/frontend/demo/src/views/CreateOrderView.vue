@@ -30,9 +30,6 @@ const schema = vuetifyize(
       },
     ),
   }),
-  // `hidden` has no Vuetify bridge component; keep it as the plain FormKit
-  // input instead of letting vuetifyize rewrite it to the unregistered `vhidden`.
-  { hidden: 'hidden' },
 )
 
 class OrderSubmitter extends HeyApiFormKitSubmitter<OrderWritable> {
