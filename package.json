@@ -24,8 +24,7 @@
     "format": "prettier src --write",
     "format:check": "prettier src --check",
     "format:diff": "npx prettier --list-different src | while IFS= read -r f; do npx prettier \"$f\" > /tmp/pf-diff-tmp && git diff --no-index -- \"$f\" /tmp/pf-diff-tmp; done",
-    "prepare": "husky",
-    "prettier:diff": "for f in $(git diff --name-only --diff-filter=ACM); do npx prettier \"$f\" > /tmp/pf-diff-tmp && git diff --no-index -- \"$f\" /tmp/pf-diff-tmp; done"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
