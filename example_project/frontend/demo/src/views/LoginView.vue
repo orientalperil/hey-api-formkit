@@ -19,7 +19,7 @@ const auth = useAuthStore()
 const schema = vuetifyize(
   applyFieldOverrides(LoginFormKitSchema, {
     username: { vuetifyProps: { autocomplete: 'username' } },
-    password: { inputType: 'password', vuetifyProps: { autocomplete: 'current-password' } },
+    password: { $formkit: 'password', vuetifyProps: { autocomplete: 'current-password' } },
   }),
 )
 
