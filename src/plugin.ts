@@ -6,7 +6,7 @@
  * runs at generation time with the whole spec graph in hand, `$ref`s (e.g. the
  * `status` enum) are resolved and inlined — no runtime ref resolution needed.
  *
- * @see https://heyapi.dev/openapi-ts/plugins  (custom plugins)
+ * @see https://heyapi.dev/openapi-ts/plugins (custom plugins)
  * @see https://formkit.com/essentials/schema
  */
 import { $, definePluginConfig } from "@hey-api/openapi-ts"

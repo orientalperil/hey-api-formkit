@@ -8,17 +8,17 @@ import type { FormKitSchemaNode } from "@formkit/core"
 export type FieldOverride = Record<string, unknown>
 
 /**
- * Apply per-field overrides to a generated FormKit schema, matching each override against a node's
- * **absolute path** — the dot-joined chain of `name`s from the schema root down
- * to the node, e.g. `customer_name` for a top-level field or `items.product`
- * for a `product` nested inside an `items` repeater.
+ * Apply per-field overrides to a generated FormKit schema, matching each
+ * override against a node's **absolute path** — the dot-joined chain of `name`s
+ * from the schema root down to the node, e.g. `customer_name` for a top-level
+ * field or `items.product` for a `product` nested inside an `items` repeater.
  *
  * Because paths are absolute, sibling fields that happen to share a `name` at
  * different depths are addressed independently: `product` targets only a
  * root-level `product`, while `items.product` targets only the one inside the
  * `items` repeater. A key never matches by bare name alone.
  *
- * This keeps the hey-api plugin app-agnostic: knowledge of *this* app's models
+ * This keeps the hey-api plugin app-agnostic: knowledge of _this_ app's models
  * (which fields are relations, what options feed them) lives in the view that
  * owns the form, not in codegen config.
  *
