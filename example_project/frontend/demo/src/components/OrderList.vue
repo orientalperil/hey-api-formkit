@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
+import { RouterLink } from 'vue-router'
 
 import { useOrdersStore } from '@/stores/orders'
 
@@ -39,7 +40,12 @@ onMounted(() => store.fetchOrders())
       <li v-for="order in orders" :key="order.id">
         <div class="order-head">
           <span class="customer">{{ order.customer_name }}</span>
-          <span class="status" :class="order.status">{{ order.status }}</span>
+          <span class="head-actions">
+            <span class="status" :class="order.status">{{ order.status }}</span>
+            <RouterLink :to="`/orders/${order.id}/edit`" class="edit-link" aria-label="Edit order">
+              <v-icon icon="mdi-pencil" size="small" />
+            </RouterLink>
+          </span>
         </div>
         <p class="meta">
           #{{ order.id }} · {{ dateFormat.format(new Date(order.created_at)) }} ·
@@ -92,6 +98,17 @@ header {
   display: flex;
   justify-content: space-between;
   font-weight: 600;
+}
+
+.head-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-link {
+  display: inline-flex;
+  color: inherit;
 }
 
 .status {

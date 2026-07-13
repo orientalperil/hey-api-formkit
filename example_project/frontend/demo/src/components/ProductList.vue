@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
+import { RouterLink } from 'vue-router'
 
 import { useProductsStore } from '@/stores/products'
 
@@ -32,7 +33,16 @@ onMounted(() => store.fetchProducts())
       <li v-for="product in products" :key="product.id">
         <div class="product-head">
           <span class="name">{{ product.name }}</span>
-          <span class="price">${{ product.price }}</span>
+          <span class="head-actions">
+            <span class="price">${{ product.price }}</span>
+            <RouterLink
+              :to="`/products/${product.id}/edit`"
+              class="edit-link"
+              aria-label="Edit product"
+            >
+              <v-icon icon="mdi-pencil" size="small" />
+            </RouterLink>
+          </span>
         </div>
         <p v-if="product.description" class="description">{{ product.description }}</p>
         <span class="stock" :class="{ out: !product.in_stock }">
@@ -78,6 +88,17 @@ header {
   display: flex;
   justify-content: space-between;
   font-weight: 600;
+}
+
+.head-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-link {
+  display: inline-flex;
+  color: inherit;
 }
 
 .description {

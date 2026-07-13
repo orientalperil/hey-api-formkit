@@ -27,6 +27,11 @@ const router = createRouter({
       component: () => import('@/views/CreateProductView.vue'),
     },
     {
+      path: '/products/:id/edit',
+      name: 'product-edit',
+      component: () => import('@/views/EditProductView.vue'),
+    },
+    {
       path: '/orders',
       name: 'orders',
       component: () => import('@/views/OrdersView.vue'),
@@ -35,6 +40,11 @@ const router = createRouter({
       path: '/orders/new',
       name: 'order-create',
       component: () => import('@/views/CreateOrderView.vue'),
+    },
+    {
+      path: '/orders/:id/edit',
+      name: 'order-edit',
+      component: () => import('@/views/EditOrderView.vue'),
     },
   ],
 })
