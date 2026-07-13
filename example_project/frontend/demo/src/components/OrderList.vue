@@ -73,7 +73,7 @@ onMounted(() => store.fetchOrders())
           <strong>${{ orderTotal(order.items) }}</strong>
         </p>
         <ul class="list-none p-0 m-0 text-sm">
-          <li v-for="item in order.items" :key="item.id">
+          <li v-for="item in order.items" :key="item.pk">
             {{ item.quantity }} × {{ item.product_name }}
             <span class="text-gray-500">@ ${{ item.unit_price }}</span>
           </li>

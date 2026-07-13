@@ -20,6 +20,9 @@ const orderId = Number(route.params.id)
 const schema = vuetifyize(
   applyFieldOverrides(OrderWritableFormKitSchema, {
     items: { min: 1 },
+    // Carried through (hidden) so the backend can match a row back to its
+    // OrderItem on save instead of deleting and recreating every item.
+    'items.pk': { $formkit: 'hidden' },
     'items.product': loaderSelect(
       () => fetchAll(productsList),
       { value: 'id', label: 'name' },
@@ -28,6 +31,9 @@ const schema = vuetifyize(
       },
     ),
   }),
+  // `hidden` has no Vuetify bridge component; keep it as the plain FormKit
+  // input instead of letting vuetifyize rewrite it to the unregistered `vhidden`.
+  { hidden: 'hidden' },
 )
 
 class OrderSubmitter extends HeyApiFormKitSubmitter<OrderWritable> {
@@ -51,6 +57,7 @@ onMounted(async () => {
       customer_name: data.customer_name,
       status: data.status,
       items: data.items.map((item) => ({
+        pk: item.pk,
         product: item.product,
         quantity: item.quantity,
         unit_price: item.unit_price,

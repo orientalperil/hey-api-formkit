@@ -68,6 +68,11 @@ export const OrderFormKitSchema: Array<FormKitSchemaNode> = [
     children: [
       {
         $formkit: 'number',
+        name: 'pk',
+        label: 'Pk',
+      },
+      {
+        $formkit: 'number',
         name: 'product',
         label: 'Product',
         validation: 'required',
@@ -89,6 +94,11 @@ export const OrderFormKitSchema: Array<FormKitSchemaNode> = [
 ]
 
 export const OrderItemFormKitSchema: Array<FormKitSchemaNode> = [
+  {
+    $formkit: 'number',
+    name: 'pk',
+    label: 'Pk',
+  },
   {
     $formkit: 'number',
     name: 'product',
@@ -158,6 +168,11 @@ export const PatchedOrderFormKitSchema: Array<FormKitSchemaNode> = [
     $formkit: 'repeater',
     name: 'items',
     children: [
+      {
+        $formkit: 'number',
+        name: 'pk',
+        label: 'Pk',
+      },
       {
         $formkit: 'number',
         name: 'product',
@@ -334,6 +349,11 @@ export const OrderWritableFormKitSchema: Array<FormKitSchemaNode> = [
     children: [
       {
         $formkit: 'number',
+        name: 'pk',
+        label: 'Pk',
+      },
+      {
+        $formkit: 'number',
         name: 'product',
         label: 'Product',
         validation: 'required',
@@ -355,6 +375,11 @@ export const OrderWritableFormKitSchema: Array<FormKitSchemaNode> = [
 ]
 
 export const OrderItemWritableFormKitSchema: Array<FormKitSchemaNode> = [
+  {
+    $formkit: 'number',
+    name: 'pk',
+    label: 'Pk',
+  },
   {
     $formkit: 'number',
     name: 'product',
@@ -424,6 +449,11 @@ export const PatchedOrderWritableFormKitSchema: Array<FormKitSchemaNode> = [
     $formkit: 'repeater',
     name: 'items',
     children: [
+      {
+        $formkit: 'number',
+        name: 'pk',
+        label: 'Pk',
+      },
       {
         $formkit: 'number',
         name: 'product',

@@ -68,9 +68,8 @@ export const OrderSchema = {
 export const OrderItemSchema = {
   type: 'object',
   properties: {
-    id: {
+    pk: {
       type: 'integer',
-      readOnly: true,
     },
     product: {
       type: 'integer',
@@ -90,7 +89,7 @@ export const OrderItemSchema = {
       pattern: '^-?\\d{0,8}(?:\\.\\d{0,2})?$',
     },
   },
-  required: ['id', 'product', 'product_name', 'unit_price'],
+  required: ['product', 'product_name', 'unit_price'],
 } as const
 
 export const PatchedCategorySchema = {
@@ -328,6 +327,9 @@ export const OrderWritableSchema = {
 export const OrderItemWritableSchema = {
   type: 'object',
   properties: {
+    pk: {
+      type: 'integer',
+    },
     product: {
       type: 'integer',
     },

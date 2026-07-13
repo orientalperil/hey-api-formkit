@@ -43,11 +43,16 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    # Writable and optional: the client sends the item's `pk` back when
+    # editing an existing line item so `OrderSerializer.update()` can match it
+    # up, and omits it for a new row. Overriding the field is required
+    # because ModelSerializer marks the pk read-only by default.
+    pk = serializers.IntegerField(required=False)
     product_name = serializers.CharField(source='product.name', read_only=True)
 
     class Meta:
         model = OrderItem
-        fields = ['id', 'product', 'product_name', 'quantity', 'unit_price']
+        fields = ['pk', 'product', 'product_name', 'quantity', 'unit_price']
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -63,6 +68,7 @@ class OrderSerializer(serializers.ModelSerializer):
         items_data = validated_data.pop('items')
         order = Order.objects.create(**validated_data)
         for item_data in items_data:
+            item_data.pop('pk', None)
             OrderItem.objects.create(order=order, **item_data)
         return order
 
@@ -71,8 +77,23 @@ class OrderSerializer(serializers.ModelSerializer):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
+
         if items_data is not None:
-            instance.items.all().delete()
+            existing_items = {item.pk: item for item in instance.items.all()}
+            kept_pks = set()
             for item_data in items_data:
-                OrderItem.objects.create(order=instance, **item_data)
+                item_pk = item_data.pop('pk', None)
+                existing_item = existing_items.get(item_pk)
+                if existing_item is not None:
+                    for attr, value in item_data.items():
+                        setattr(existing_item, attr, value)
+                    existing_item.save()
+                    kept_pks.add(item_pk)
+                else:
+                    new_item = OrderItem.objects.create(order=instance, **item_data)
+                    kept_pks.add(new_item.pk)
+            for item_pk, item in existing_items.items():
+                if item_pk not in kept_pks:
+                    item.delete()
+
         return instance

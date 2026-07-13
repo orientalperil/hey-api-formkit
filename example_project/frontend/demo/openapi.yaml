@@ -702,9 +702,8 @@ components:
     OrderItem:
       type: object
       properties:
-        id:
+        pk:
           type: integer
-          readOnly: true
         product:
           type: integer
         product_name:
@@ -719,7 +718,6 @@ components:
           format: decimal
           pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
       required:
-      - id
       - product
       - product_name
       - unit_price

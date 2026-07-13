@@ -27,7 +27,7 @@ export type Order = {
 }
 
 export type OrderItem = {
-  readonly id: number
+  pk?: number
   product: number
   readonly product_name: string
   quantity?: number
@@ -126,6 +126,7 @@ export type OrderWritable = {
 }
 
 export type OrderItemWritable = {
+  pk?: number
   product: number
   quantity?: number
   unit_price: string
