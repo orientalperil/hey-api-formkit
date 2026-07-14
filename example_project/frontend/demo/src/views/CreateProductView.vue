@@ -30,10 +30,7 @@ const schema = vuetifyize(
       {
         nullable: true,
       },
-    ),
-    in_stock: {
-      validation: "accepted",
-    },
+    )
   }),
 )
 
