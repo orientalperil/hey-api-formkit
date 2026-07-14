@@ -30,7 +30,7 @@ const schema = vuetifyize(
       {
         nullable: true,
       },
-    )
+    ),
   }),
 )
 
